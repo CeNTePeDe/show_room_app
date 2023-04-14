@@ -5,6 +5,12 @@ name = "pypi"
 
 [packages]
 django = "*"
+flake8 = "*"
+mypy = "*"
+pylink = "*"
+black = "*"
+django-dotenv = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

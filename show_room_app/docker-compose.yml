@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    container_name: show_room_app
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
