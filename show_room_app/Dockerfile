@@ -1,16 +1,16 @@
-FROM python:3.8
+FROM python:3.10
 
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/show_room_app
 
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile Pipfile.lock /usr/src/show_room_app/
 RUN python -m pip install --upgrade pip
-RUN pip install pipenv && pipenv install --dev --system --deploy
+RUN pip install pipenv && pipenv install --system
 
+#COPY . /usr/src/app/
 COPY . .
-
 
 
 

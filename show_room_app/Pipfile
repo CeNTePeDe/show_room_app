@@ -11,6 +11,11 @@ pylink = "*"
 black = "*"
 django-dotenv = "*"
 python-dotenv = "*"
+psycopg2 = "*"
+django-countries = "*"
+django-money = "*"
+djangorestframework = "*"
+pillow = "*"
 
 [dev-packages]
 
