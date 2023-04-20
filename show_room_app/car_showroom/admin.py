@@ -24,6 +24,9 @@ class CarShowRoomAdmin(admin.ModelAdmin):
 @admin.register(ProviderCarShowRoom)
 class ProviderCarShowRoom(admin.ModelAdmin):
     list_display = (
-        "provider", "margin",
-        "car_showroom", "number_of_car", "discount",
+        "provider",
+        "margin",
+        "car_showroom",
+        "number_of_cars",
+        "discount",
     )

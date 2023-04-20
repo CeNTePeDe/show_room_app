@@ -1,5 +1,2 @@
-def jsonfield_default_value():  # This is a callable
-    return {'color': '',
-            'engine_type': '',
-            'number_of_doors': '',
-            'body_type': ''}
+def jsonfield_default_value():
+    return {"color": "", "engine_type": "", "number_of_doors": "", "body_type": ""}

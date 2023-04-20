@@ -9,7 +9,6 @@ COPY Pipfile Pipfile.lock /usr/src/show_room_app/
 RUN python -m pip install --upgrade pip
 RUN pip install pipenv && pipenv install --system
 
-#COPY . /usr/src/app/
 COPY . .
 
 

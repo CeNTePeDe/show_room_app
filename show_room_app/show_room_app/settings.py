@@ -11,9 +11,7 @@ DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = ["*"]
 if not DEBUG:
-    ALLOWED_HOSTS += [os.environ.get("ALLOWED_HOST")]
-
-# Application definition
+    ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST")]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -24,6 +22,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_countries",
     "djmoney",
+    "rest_framework",
     "cars.apps.CarsConfig",
     "customer.apps.CustomerConfig",
     "discount.apps.DiscountConfig",
@@ -105,12 +104,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-#AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "user.User"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

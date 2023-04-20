@@ -6,6 +6,7 @@ from cars.models import Car
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
     list_display = [
+        "id",
         "name",
         "model_car",
         "price",

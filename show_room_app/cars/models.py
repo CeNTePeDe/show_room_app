@@ -39,7 +39,7 @@ class Car(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __repr__(self):
-        return self.name, self.model_car
+        return f"{self.name},{self.model_car}"
 
     class Meta:
         verbose_name = "Car"
