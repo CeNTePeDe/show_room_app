@@ -19,6 +19,7 @@ class CarShowRoomAdmin(admin.ModelAdmin):
         "is_active",
     )
     search_fields = ("name__startswith",)
+    readonly_fields = ("id",)
 
 
 @admin.register(ProviderCarShowRoom)

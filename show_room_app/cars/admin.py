@@ -5,7 +5,7 @@ from cars.models import Car
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = [
+    list_display = (
         "id",
         "name",
         "model_car",
@@ -17,5 +17,6 @@ class CarAdmin(admin.ModelAdmin):
         "engine_type",
         "number_of_doors",
         "is_active",
-    ]
-    list_filter = ["name", "model_car"]
+    )
+    list_filter = ("name", "model_car")
+    readonly_fields = ("id",)

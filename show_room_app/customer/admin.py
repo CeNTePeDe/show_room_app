@@ -15,9 +15,11 @@ class CustomerAdmin(admin.ModelAdmin):
         "purchases",
     )
     list_filter = ("username",)
+    readonly_fields = ("id",)
 
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ("car_showroom", "price", "discount", "date")
     list_filter = ("date",)
+    readonly_fields = ("date",)
