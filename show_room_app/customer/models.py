@@ -12,6 +12,7 @@ class Customer(models.Model):
     purchases = models.ForeignKey("Transaction", on_delete=models.CASCADE)
     max_price = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     is_active = models.BooleanField(default=True)
+    user = models.OneToOneField("user.User", on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return self.username
@@ -32,6 +33,9 @@ class Transaction(models.Model):
     season_discount = models.ForeignKey(
         "discount.SeasonDiscount", on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return self.car_showroom.name
 
     class Meta:
         verbose_name = "Transaction"

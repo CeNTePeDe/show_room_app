@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from user.managers import CustomUserManager
+
 
 class User(AbstractUser):
     is_customer = models.BooleanField(default=False)
     is_car_showroom = models.BooleanField(default=False)
     is_provider = models.BooleanField(default=False)
+
+    objects = CustomUserManager()

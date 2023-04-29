@@ -6,15 +6,15 @@ from customer.models import Customer, Transaction
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "username",
         "balance",
         "purchases",
         "max_price",
         "is_active",
+        "user",
     )
     list_filter = ("username",)
-    readonly_fields = ("id",)
+    readonly_fields = ("user",)
 
 
 @admin.register(Transaction)
