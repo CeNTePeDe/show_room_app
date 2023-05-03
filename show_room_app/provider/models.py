@@ -5,7 +5,9 @@ from core.abstract_models import BaseRole, BaseSellModel
 
 class Provider(BaseRole):
     cars = models.ManyToManyField("cars.Car", through="CarProvider")
-    user = models.OneToOneField("user.User", on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(
+        "user.User", on_delete=models.CASCADE, primary_key=True, related_name="provider"
+    )
 
     def __str__(self):
         return self.name

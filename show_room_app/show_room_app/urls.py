@@ -10,25 +10,28 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenVerifyView,
 )
 
-from car_showroom.views import CarShowRoomListView
-from cars.views import CarListView
+from car_showroom.views import CarShowRoomView, SellModelView
+from cars.views import CarView
 from customer.views import CustomerView, TransactionView
-from provider.views import ProviderListView, CarProviderListView
+from provider.views import ProviderView, CarProviderListView
 from discount.views import (
     SeasonDiscountView,
     ProviderDiscountView,
     CarShowRoomDiscountView,
 )
+from show_room_app import settings
 from user.views import UserView
 
 router = DefaultRouter()
 router.register(r"user", UserView, basename="user")
-router.register(r"cars", CarListView, basename="car")
-router.register(r"provider", ProviderListView, basename="provider")
-router.register(r'car_provider', CarProviderListView, basename="car_provider")
-router.register(r"car_showroom", CarShowRoomListView, basename="car_showroom")
+router.register(r"cars", CarView, basename="car")
+router.register(r"provider", ProviderView, basename="provider")
+router.register(r"car_provider", CarProviderListView, basename="car_provider")
+router.register(r"car_showroom", CarShowRoomView, basename="car_showroom")
+router.register(r"sell_car", SellModelView, basename="sell_car")
 router.register(r"customer", CustomerView, basename="customer")
 router.register(r"transaction", TransactionView, basename="transaction")
 router.register(r"season_discount", SeasonDiscountView, basename="season_discount")
@@ -38,7 +41,6 @@ router.register(
 router.register(
     r"car_showroom_discount", CarShowRoomDiscountView, basename="car_showroom_discount"
 )
-
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -72,6 +74,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/drf-auth/", include("rest_framework.urls")),
     path("api/v1/", include(router.urls)),
-   # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-   # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
 ]
+if settings.DEBUG:
+    urlpatterns = [path("__debug__/", include("debug_toolbar.urls"))] + urlpatterns

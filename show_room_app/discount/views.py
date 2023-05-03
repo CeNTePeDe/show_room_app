@@ -11,7 +11,6 @@ from discount.serializer import (
     ProviderDiscountSerializer,
     CarShowRoomDiscountSerializer,
 )
-from user.permission import IsCarShowroomOrReadOnly, IsProviderOrReadOnly
 
 
 class SeasonDiscountView(
@@ -32,15 +31,6 @@ class SeasonDiscountView(
         serializer = SeasonDiscountSerializer(season_discount)
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        serializer = SeasonDiscountSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
-
 
 class ProviderDiscountView(
     mixins.CreateModelMixin,
@@ -54,6 +44,12 @@ class ProviderDiscountView(
     queryset = ProviderDiscount.objects.all()
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def retrieve(self, request, pk=id, *args, **kwargs):
+        queryset = self.get_queryset()
+        provider_discount = get_object_or_404(queryset, pk=pk)
+        serializer = ProviderDiscountSerializer(provider_discount)
+        return Response(serializer.data)
+
 
 class CarShowRoomDiscountView(
     mixins.CreateModelMixin,
@@ -66,3 +62,9 @@ class CarShowRoomDiscountView(
     serializer_class = CarShowRoomDiscountSerializer
     queryset = SeasonDiscount.objects.all()
     permission_classes = [IsAdminUserOrReadOnly]
+
+    def retrieve(self, request, pk=id, *args, **kwargs):
+        queryset = self.get_queryset()
+        car_showroom_discount = get_object_or_404(queryset, pk=pk)
+        serializer = ProviderDiscountSerializer(car_showroom_discount)
+        return Response(serializer.data)

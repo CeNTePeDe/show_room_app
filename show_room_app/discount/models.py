@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 from core.abstract_models import BaseDiscount

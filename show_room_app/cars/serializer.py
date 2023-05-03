@@ -10,11 +10,3 @@ class CarSerializer(CountryFieldMixin, serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = "__all__"
-
-
-class CarListSerializer(serializers.ModelSerializer):
-    """List of cars"""
-
-    class Meta:
-        model = Car
-        fields = ("name", "model_car")

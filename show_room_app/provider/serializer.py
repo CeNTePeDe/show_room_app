@@ -4,13 +4,10 @@ from django_countries.serializers import CountryFieldMixin
 from provider.models import Provider, CarProvider
 
 
-class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    class Meta:
-        model = Provider
-        fields = ("name", "year", "country", "characteristic")
-
-
 class CarProviderSerializer(serializers.ModelSerializer):
+    car = serializers.CharField(source="car.name")
+    provider = serializers.CharField(source="provider.name")
+
     class Meta:
         model = CarProvider
         fields = (
@@ -21,9 +18,18 @@ class CarProviderSerializer(serializers.ModelSerializer):
         )
 
 
-class ProviderDetailSerializer(CountryFieldMixin, serializers.ModelSerializer):
+class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
     cars = serializers.StringRelatedField(many=True, read_only=True)
+    user = serializers.CharField(source="user.username")
 
     class Meta:
         model = Provider
-        fields = ("name", "year", "country", "characteristic", "cars", "user")
+        fields = (
+            "name",
+            "year",
+            "country",
+            "characteristic",
+            "cars",
+            "user",
+            "is_active",
+        )

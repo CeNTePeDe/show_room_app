@@ -1,45 +1,58 @@
-from rest_framework.decorators import permission_classes
+from django.db.models import Prefetch
+from rest_framework.decorators import permission_classes, action
 from rest_framework import viewsets, status, mixins
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 
+from cars.models import Car
 from provider.models import Provider, CarProvider
 from provider.serializer import (
     ProviderSerializer,
-    ProviderDetailSerializer,
     CarProviderSerializer,
 )
+from user.models import User
 from user.permission import IsProviderOrReadOnly
 
 
-class ProviderListView(mixins.CreateModelMixin,
-                       mixins.RetrieveModelMixin,
-                       mixins.UpdateModelMixin,
-                       mixins.ListModelMixin,
-                       viewsets.GenericViewSet):
-    serializer_class = ProviderDetailSerializer
-    queryset = Provider.objects.filter(is_active=True)
+class ProviderView(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = (
+        Provider.objects.prefetch_related('cars')
+        .prefetch_related(
+            Prefetch("user", queryset=User.objects.all().only("username"))
+        )
+        .filter(is_active=True)
+    )
+    serializer_class = ProviderSerializer
     permission_classes = [IsProviderOrReadOnly]
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = ProviderSerializer(queryset, many=True)
-        return Response(serializer.data)
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
-        provider = get_object_or_404(queryset, pk=pk)
-        serializer = ProviderDetailSerializer(provider)
+        car_showroom = get_object_or_404(queryset, pk=pk)
+        serializer = ProviderSerializer(car_showroom)
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        self.perform_destroy(queryset)
+    @action(
+        detail=True, methods=["delete"], url_path=r"", permission_classes=[IsAdminUser]
+    )
+    def delete_provider(self, request, pk=None):
+        Provider.objects.get(id=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CarProviderListView(viewsets.ModelViewSet):
     serializer_class = CarProviderSerializer
-    queryset = CarProvider.objects.all()
+    queryset = (
+        CarProvider.objects.prefetch_related(
+            Prefetch('provider', queryset=Provider.objects.all().only('name'))
+        ).prefetch_related(
+            Prefetch('car', queryset=Car.objects.all().only('name'))
+        ).all()
+    )
     permission_classes = [IsProviderOrReadOnly]

@@ -4,14 +4,6 @@ from customer.models import Customer, Transaction
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    """List of customer"""
-
-    class Meta:
-        model = Customer
-        fields = ("username",)
-
-
-class CustomerDetailSerializer(serializers.ModelSerializer):
     purchases = serializers.StringRelatedField(read_only=True)
 
     class Meta:

@@ -12,11 +12,11 @@ class RegisterSerializer(serializers.Serializer):
     is_provider = serializers.BooleanField(required=False)
     is_car_showroom = serializers.BooleanField(required=False)
 
-    password1 = serializers.CharField(required=True, write_only=True)
-    password2 = serializers.CharField(required=True, write_only=True)
+    password = serializers.CharField(required=True, write_only=True)
+    password_confirm = serializers.CharField(required=True, write_only=True)
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
@@ -26,5 +26,4 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "is_customer",
             "is_provider",
             "is_car_showroom",
-            "is_active",
         ]

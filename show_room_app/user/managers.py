@@ -23,9 +23,9 @@ class CustomUserManager(BaseUserManager):
         )
 
         if (
-            extra_fields.get("is_customer") is not True
-            or extra_fields.get("is_car_showroom") is not True
-            or extra_fields.get("is_provider") is not True
+            not extra_fields.get("is_customer") is not True
+            or not extra_fields.get("is_car_showroom") is not True
+            or not extra_fields.get("is_provider") is not True
         ):
             raise ValueError("One of this fields must be chosen")
         user.set_password(password)
@@ -40,8 +40,8 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
 
-        if extra_fields.get("is_staff") is not True:
+        if not extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
-        if extra_fields.get("is_superuser") is not True:
+        if not extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(email, username, **extra_fields)

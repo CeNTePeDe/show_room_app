@@ -1,12 +1,18 @@
-from rest_framework import generics, viewsets, mixins
+from django.db.models import Prefetch
+from rest_framework.generics import get_object_or_404
+from rest_framework import generics, viewsets, mixins, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
+
+from car_showroom.models import CarShowRoom
 from customer.serializer import (
     CustomerSerializer,
-    CustomerDetailSerializer,
     TransactionSerializer,
 )
 from customer.models import Customer, Transaction
+from discount.models import CarShowRoomDiscount, SeasonDiscount
+from user.models import User
 from user.permission import IsCustomerOrReadOnly, IsCarShowroomOrReadOnly
 
 
@@ -15,19 +21,31 @@ class CustomerView(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     """Display all customers"""
 
-    queryset = Customer.objects.filter(is_active=True)
-    serializer_class = CustomerDetailSerializer
-    permission_classes = (IsAdminUser, IsCustomerOrReadOnly)
+    queryset = (
+        Customer.objects.filter(is_active=True)
+        .prefetch_related(
+            Prefetch('user', queryset=User.objects.all().only('username'))
+        )
+    )
+    serializer_class = CustomerSerializer
+    permission_classes = [IsCustomerOrReadOnly]
 
-    def list(self, request, *args, **kwargs):
+    def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = CustomerSerializer(queryset, many=True)
+        car_showroom = get_object_or_404(queryset, pk=pk)
+        serializer = CustomerSerializer(car_showroom)
         return Response(serializer.data)
+
+    @action(
+        detail=True, methods=["delete"], url_path=r"", permission_classes=[IsAdminUser]
+    )
+    def delete_customer(self, request, pk=None):
+        Customer.objects.get(id=pk).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TransactionView(
@@ -35,10 +53,20 @@ class TransactionView(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
     mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Transaction.objects.all()
+    queryset = Transaction.objects.prefetch_related(
+        Prefetch('car_showroom', queryset=CarShowRoom.objects.all().only('name'))
+    ).prefetch_related(
+        Prefetch('season_discount', queryset=SeasonDiscount.objects.all().only('discount_name'))
+    ).prefetch_related(
+        Prefetch('discount', queryset=CarShowRoomDiscount.objects.all().only('discount_name'))).all()
 
     serializer_class = TransactionSerializer
     permission_classes = [IsCarShowroomOrReadOnly]
+
+    def retrieve(self, request, pk=id, *args, **kwargs):
+        queryset = self.get_queryset()
+        transaction = get_object_or_404(queryset, pk=pk)
+        serializer = TransactionSerializer(transaction)
+        return Response(serializer.data)
