@@ -11,7 +11,7 @@ class CarShowRoom(BaseRole):
         "user.User",
         on_delete=models.CASCADE,
         primary_key=True,
-        related_name="CarShowRoom",
+        related_name="car_showroom",
     )
 
     def __str__(self):

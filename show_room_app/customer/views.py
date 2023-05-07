@@ -1,18 +1,14 @@
-from django.db.models import Prefetch
 from rest_framework.generics import get_object_or_404
-from rest_framework import generics, viewsets, mixins, status
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from car_showroom.models import CarShowRoom
 from customer.serializer import (
     CustomerSerializer,
     TransactionSerializer,
 )
 from customer.models import Customer, Transaction
-from discount.models import CarShowRoomDiscount, SeasonDiscount
-from user.models import User
 from user.permission import IsCustomerOrReadOnly, IsCarShowroomOrReadOnly
 
 
@@ -27,9 +23,8 @@ class CustomerView(
 
     queryset = (
         Customer.objects.filter(is_active=True)
-        .prefetch_related(
-            Prefetch('user', queryset=User.objects.all().only('username'))
-        )
+        .select_related("user")
+        .prefetch_related("purchases")
     )
     serializer_class = CustomerSerializer
     permission_classes = [IsCustomerOrReadOnly]
@@ -37,7 +32,7 @@ class CustomerView(
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
         car_showroom = get_object_or_404(queryset, pk=pk)
-        serializer = CustomerSerializer(car_showroom)
+        serializer = self.serializer_class(car_showroom)
         return Response(serializer.data)
 
     @action(
@@ -56,17 +51,13 @@ class TransactionView(
     viewsets.GenericViewSet,
 ):
     queryset = Transaction.objects.prefetch_related(
-        Prefetch('car_showroom', queryset=CarShowRoom.objects.all().only('name'))
-    ).prefetch_related(
-        Prefetch('season_discount', queryset=SeasonDiscount.objects.all().only('discount_name'))
-    ).prefetch_related(
-        Prefetch('discount', queryset=CarShowRoomDiscount.objects.all().only('discount_name'))).all()
-
+        "car_showroom", "season_discount", "discount"
+    )
     serializer_class = TransactionSerializer
     permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
         transaction = get_object_or_404(queryset, pk=pk)
-        serializer = TransactionSerializer(transaction)
+        serializer = self.serializer_class(transaction)
         return Response(serializer.data)

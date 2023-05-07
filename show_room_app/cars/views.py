@@ -1,8 +1,8 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework import mixins
-from rest_framework.decorators import action, permission_classes
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAdminUser
 
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -27,7 +27,7 @@ class CarView(
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
         car = get_object_or_404(queryset, pk=pk)
-        serializer = CarSerializer(car)
+        serializer = self.serializer_class(car)
         return Response(serializer.data)
 
     @action(
@@ -36,9 +36,9 @@ class CarView(
         permission_classes=[IsAdminUser],
         url_path=r"",
     )
-    def unpublished_cars(self, request):
-        unpublished = Car.objects.filter(is_active=False)
-        self.serializer = CarSerializer(unpublished, many=True)
+    def inactive_cars(self, request):
+        inactive = Car.objects.filter(is_active=False)
+        self.serializer = CarSerializer(inactive, many=True)
         serializer = self.serializer
         return Response(serializer.data)
 

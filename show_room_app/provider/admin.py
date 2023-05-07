@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from provider.models import Provider, CarProvider
 
 
@@ -15,6 +14,11 @@ class CarAdmin(admin.ModelAdmin):
 
 class ProviderAdmin(admin.ModelAdmin):
     inlines = (CarProviderInLine,)
+    list_display = (
+        "name",
+        "is_active",
+    )
+    list_filter = ("name",)
 
 
 admin.site.register(Provider, ProviderAdmin)

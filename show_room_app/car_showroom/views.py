@@ -1,8 +1,9 @@
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets, status, mixins
 
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
@@ -11,15 +12,12 @@ from car_showroom.serializer import (
     CarShowRoomSerializer,
     SellModelSerializer,
 )
-from cars.models import Car
-from provider.models import Provider
-from user.models import User
 from user.permission import IsCarShowroomOrReadOnly
 
 
 class CarShowRoomView(
-    mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
@@ -27,11 +25,8 @@ class CarShowRoomView(
     serializer_class = CarShowRoomSerializer
     queryset = (
         CarShowRoom.objects.filter(is_active=True)
-        .prefetch_related("cars")
-        .prefetch_related(
-            Prefetch('user', queryset=User.objects.all().only('username'))
+        .prefetch_related("cars", "user")
         )
-    )
     permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
@@ -40,6 +35,15 @@ class CarShowRoomView(
         serializer = CarShowRoomSerializer(car_showroom)
         return Response(serializer.data)
 
+    def create(self, request, *args, **kwargs):
+        if request.user.is_car_showroom:
+            car_showroom = self.request.data
+            serializer = self.serializer_class(data=car_showroom)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     @action(
         detail=True, methods=["delete"], url_path=f"", permission_classes=[IsAdminUser]
     )
@@ -47,21 +51,9 @@ class CarShowRoomView(
         CarShowRoom.objects.get(id=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 class SellModelView(viewsets.ModelViewSet):
     serializer_class = SellModelSerializer
-    queryset = (
-        SellModel.objects.prefetch_related("discount")
-        .prefetch_related("season_discount")
-        .prefetch_related(
-            Prefetch('car_showroom', queryset=CarShowRoom.objects.all().only('name'))
-        )
-        .prefetch_related(
-            Prefetch('provider', queryset=Provider.objects.all().only('name'))
-        )
-        .prefetch_related(
-            Prefetch('car', queryset=Car.objects.all().only('name'))
-        )
-        .all()
+    queryset = SellModel.objects.prefetch_related(
+        "discount", "season_discount", "car_showroom", "provider", "car"
     )
     permission_classes = [IsCarShowroomOrReadOnly]

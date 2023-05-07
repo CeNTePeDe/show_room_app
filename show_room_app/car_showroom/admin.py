@@ -10,6 +10,14 @@ class SellModelInLine(admin.TabularInline):
 
 class CarShowRoomAdmin(admin.ModelAdmin):
     inlines = (SellModelInLine,)
+    list_display = (
+        "name",
+        "country",
+        "balance",
+        "user",
+        "is_active",
+        )
+    list_filter = ("name",)
 
 
 class ProviderAdmin(admin.ModelAdmin):

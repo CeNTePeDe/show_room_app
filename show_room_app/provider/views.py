@@ -1,11 +1,10 @@
 from django.db.models import Prefetch
-from rest_framework.decorators import permission_classes, action
+from rest_framework.decorators import action
 from rest_framework import viewsets, status, mixins
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
-from cars.models import Car
 from provider.models import Provider, CarProvider
 from provider.serializer import (
     ProviderSerializer,
@@ -22,20 +21,14 @@ class ProviderView(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = (
-        Provider.objects.prefetch_related('cars')
-        .prefetch_related(
-            Prefetch("user", queryset=User.objects.all().only("username"))
-        )
-        .filter(is_active=True)
-    )
+    queryset = Provider.objects.prefetch_related("cars", "user").filter(is_active=True)
     serializer_class = ProviderSerializer
     permission_classes = [IsProviderOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
         car_showroom = get_object_or_404(queryset, pk=pk)
-        serializer = ProviderSerializer(car_showroom)
+        serializer = self.serializer_class(car_showroom)
         return Response(serializer.data)
 
     @action(
@@ -48,11 +41,5 @@ class ProviderView(
 
 class CarProviderListView(viewsets.ModelViewSet):
     serializer_class = CarProviderSerializer
-    queryset = (
-        CarProvider.objects.prefetch_related(
-            Prefetch('provider', queryset=Provider.objects.all().only('name'))
-        ).prefetch_related(
-            Prefetch('car', queryset=Car.objects.all().only('name'))
-        ).all()
-    )
+    queryset = CarProvider.objects.prefetch_related("provider", "car")
     permission_classes = [IsProviderOrReadOnly]

@@ -5,27 +5,19 @@ from django.utils.translation import gettext_lazy as _
 class CustomUserManager(BaseUserManager):
     """Custom user model manager."""
 
-    def create_user(
-        self, email, username, first_name, last_name, password, **extra_fields
-    ):
+    def create_user(self, email, username, password, **extra_fields):
         """
         Create and save a User with the given email and password.
         """
         if not email:
             raise ValueError(_("The Email must be set"))
         email = self.normalize_email(email)
-        user = self.model(
-            username=username,
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            **extra_fields
-        )
+        user = self.model(username=username, email=email, **extra_fields)
 
         if (
-            not extra_fields.get("is_customer") is not True
-            or not extra_fields.get("is_car_showroom") is not True
-            or not extra_fields.get("is_provider") is not True
+            extra_fields.get("is_customer") is False
+            and extra_fields.get("is_car_showroom") is False
+            and extra_fields.get("is_provider") is False
         ):
             raise ValueError("One of this fields must be chosen")
         user.set_password(password)
@@ -40,8 +32,8 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
 
-        if not extra_fields.get("is_staff") is not True:
+        if extra_fields.get("is_staff") is False:
             raise ValueError(_("Superuser must have is_staff=True."))
-        if not extra_fields.get("is_superuser") is not True:
+        if extra_fields.get("is_superuser") is False:
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(email, username, **extra_fields)

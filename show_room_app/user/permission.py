@@ -15,10 +15,9 @@ class IsCustomerOrReadOnly(BasePermission):
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
-        if (
+        return (
             obj.user == request.user and request.user.is_customer
-        ) or request.user.is_superuser:
-            return True
+        ) or request.user.is_superuser
 
 
 class IsCarShowroomOrReadOnly(BasePermission):
@@ -32,10 +31,9 @@ class IsCarShowroomOrReadOnly(BasePermission):
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
-        if (
+        return (
             obj.user == request.user and request.user.is_car_showroom
-        ) or request.user.is_superuser:
-            return True
+        ) or request.user.is_superuser
 
 
 class IsProviderOrReadOnly(BasePermission):
@@ -49,8 +47,6 @@ class IsProviderOrReadOnly(BasePermission):
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
-        if (
+        return (
             obj.user == request.user and request.user.is_provider
-        ) or request.user.is_superuser:
-            return True
-        return False
+        ) or request.user.is_superuser
