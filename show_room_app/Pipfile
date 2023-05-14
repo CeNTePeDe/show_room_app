@@ -21,6 +21,13 @@ drf-yasg = "*"
 django-filter = "*"
 django-cors-headers = "*"
 django-debug-toolbar = "*"
+pytest = "*"
+pytest-django = "*"
+faker = "*"
+faker-vehicle = "*"
+pytest-drf = "*"
+factory-boy = "*"
+pytest-factoryboy = "*"
 
 [dev-packages]
 

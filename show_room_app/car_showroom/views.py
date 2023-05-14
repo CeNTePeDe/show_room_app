@@ -23,10 +23,9 @@ class CarShowRoomView(
     viewsets.GenericViewSet,
 ):
     serializer_class = CarShowRoomSerializer
-    queryset = (
-        CarShowRoom.objects.filter(is_active=True)
-        .prefetch_related("cars", "user")
-        )
+    queryset = CarShowRoom.objects.filter(is_active=True).prefetch_related(
+        "cars", "user"
+    )
     permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
@@ -50,6 +49,7 @@ class CarShowRoomView(
     def delete_car_showroom(self, request, pk=None):
         CarShowRoom.objects.get(id=pk).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class SellModelView(viewsets.ModelViewSet):
     serializer_class = SellModelSerializer

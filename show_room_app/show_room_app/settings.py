@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     "django_countries",
     "djmoney",
     "rest_framework",
-    "djoser",
+    # "djoser",
     "rest_framework_simplejwt",
     "debug_toolbar",
     "cars.apps.CarsConfig",
@@ -81,7 +81,10 @@ DATABASES = {
         "PASSWORD": os.environ.get("SQL_PASSWORD"),
         "HOST": os.environ.get("SQL_HOST"),
         "PORT": os.environ.get("SQL_PORT"),
-    }
+        "TEST": {
+            "NAME": os.environ.get("TEST_DB"),
+        },
+    },
 }
 
 # Password validation
@@ -131,11 +134,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "USER_DETAILS_SERIALIZER": "user.serializer.UserDetailSerializer",
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 5,
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
+    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    # "PAGE_SIZE": 5,
+    # "DEFAULT_AUTHENTICATION_CLASSES": [
+    #     "rest_framework_simplejwt.authentication.JWTAuthentication",
+    # ],
 }
 
 INTERNAL_IPS = [

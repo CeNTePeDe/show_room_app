@@ -10,7 +10,6 @@ from provider.serializer import (
     ProviderSerializer,
     CarProviderSerializer,
 )
-from user.models import User
 from user.permission import IsProviderOrReadOnly
 
 

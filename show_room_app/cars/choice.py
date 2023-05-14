@@ -15,7 +15,7 @@ class BodyType(models.TextChoices):
 
 
 class EnginType(models.TextChoices):
-    Petrol = "Petrol "
+    Petrol = "Petrol"
     Diesel = "Diesel"
     Electric = "Electric"
     Hybrid = "Hybrid"

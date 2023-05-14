@@ -16,7 +16,7 @@ class CarShowRoomAdmin(admin.ModelAdmin):
         "balance",
         "user",
         "is_active",
-        )
+    )
     list_filter = ("name",)
 
 
