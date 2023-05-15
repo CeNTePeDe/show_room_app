@@ -4,7 +4,7 @@ from customer.models import Customer, Transaction
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    purchases = serializers.StringRelatedField(read_only=True)
+    # purchases = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Customer
@@ -12,9 +12,9 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    car_showroom = serializers.StringRelatedField(read_only=True)
-    discount = serializers.StringRelatedField(read_only=True)
-    season_discount = serializers.StringRelatedField(read_only=True)
+    # car_showroom = serializers.StringRelatedField(read_only=True)
+    # discount = serializers.StringRelatedField(read_only=True)
+    # season_discount = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Transaction

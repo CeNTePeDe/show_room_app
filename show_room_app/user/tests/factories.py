@@ -16,7 +16,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     last_name = faker.last_name()
     is_customer = False
     is_provider = False
-    is_car_showroom = False
+    is_car_showroom = True
 
 
 class UserCustomerFactory(UserFactory):

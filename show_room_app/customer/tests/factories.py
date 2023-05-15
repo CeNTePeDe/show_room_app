@@ -28,7 +28,7 @@ class CustomerFactory(factory.django.DjangoModelFactory):
 
     username = faker.name()
     balance = Decimal("23.99")
-    purchase = factory.SubFactory(TransactionFactory)
+    purchases = factory.SubFactory(TransactionFactory)
     max_price = Decimal("5413615.00")
     is_active = True
-    user = factory.RelatedFactory(UserFactory, related_name="customer")
+    user = factory.SubFactory(UserFactory)

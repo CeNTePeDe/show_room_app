@@ -5,8 +5,8 @@ from provider.models import Provider, CarProvider
 
 
 class CarProviderSerializer(serializers.ModelSerializer):
-    car = serializers.CharField(source="car.name")
-    provider = serializers.CharField(source="provider.name")
+    # car = serializers.CharField(source="car.name")
+    # provider = serializers.CharField(source="provider.name")
 
     class Meta:
         model = CarProvider
@@ -20,7 +20,7 @@ class CarProviderSerializer(serializers.ModelSerializer):
 
 class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
     cars = serializers.StringRelatedField(many=True, read_only=True)
-    user = serializers.CharField(source="user.username")
+    # user = serializers.CharField(source="user.username")
 
     class Meta:
         model = Provider

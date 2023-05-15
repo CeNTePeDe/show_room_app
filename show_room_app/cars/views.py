@@ -21,8 +21,8 @@ class CarView(
 ):
     queryset = Car.objects.filter(is_active=True)
     serializer_class = CarSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
-    http_method_names = ["get", "post", "patch", "delete"]
+
+    # permission_classes = [IsAdminUserOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()

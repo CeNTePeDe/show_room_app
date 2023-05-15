@@ -6,7 +6,7 @@ from car_showroom.models import CarShowRoom, SellModel
 
 class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
     cars = serializers.StringRelatedField(many=True, read_only=True)
-    user = serializers.CharField(source="user.username")
+    # user = serializers.CharField(source="user.username")
 
     class Meta:
         model = CarShowRoom

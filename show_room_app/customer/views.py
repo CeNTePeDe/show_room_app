@@ -27,7 +27,7 @@ class CustomerView(
         .prefetch_related("purchases")
     )
     serializer_class = CustomerSerializer
-    permission_classes = [IsCustomerOrReadOnly]
+    # permission_classes = [IsCustomerOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -54,7 +54,7 @@ class TransactionView(
         "car_showroom", "season_discount", "discount"
     )
     serializer_class = TransactionSerializer
-    permission_classes = [IsCarShowroomOrReadOnly]
+    # permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()

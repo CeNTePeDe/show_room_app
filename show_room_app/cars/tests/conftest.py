@@ -1,15 +1,14 @@
 import pytest
-from rest_framework.test import APIClient
-from pytest_factoryboy import register
-
-
-from cars.tests.factories import CarFakeFactory
-
-
-register(CarFakeFactory)  # car_fake_factory
+from .factories import CarFactory
 
 
 @pytest.fixture
-def api_client():
-    client = APIClient()
-    return client
+def create_car():
+    create_car = CarFactory.create()
+    return create_car
+
+
+@pytest.fixture
+def build_car():
+    build_car = CarFactory.build()
+    return build_car

@@ -3,12 +3,11 @@ import json
 
 from discount.models import ProviderDiscount
 from discount.serializer import ProviderDiscountSerializer
-from discount.tests.factories import ProviderDiscountFactory
 
 ENDPOINT = "/api/v1_discount/provider_discount/"
-pytestmark = pytest.mark.django_db
 
 
+@pytest.mark.django_db
 def test_provider_discount_list(client):
     response = client.get(ENDPOINT)
     provider_discount = ProviderDiscount.objects.all()
@@ -17,57 +16,54 @@ def test_provider_discount_list(client):
     assert response.data == expected_data
 
 
-def test_create_provider_discount(client):
-    provider_discount = ProviderDiscountFactory.build()
+@pytest.mark.django_db
+def test_create_provider_discount(client, build_provider_discount):
     expected_json = {
-        "discount_name": provider_discount.discount_name,
-        "discount_rate": provider_discount.discount_rate,
+        "discount_name": build_provider_discount.discount_name,
+        "discount_rate": build_provider_discount.discount_rate,
     }
     response = client.post(ENDPOINT, data=expected_json)
+    data = response.data
     assert response.status_code == 201
-    assert (json.loads(response.content))[
-        "discount_name"
-    ] == provider_discount.discount_name
-    assert (json.loads(response.content))[
-        "discount_rate"
-    ] == provider_discount.discount_rate
+    assert data["discount_name"] == expected_json["discount_name"]
+    assert data["discount_rate"] == expected_json["discount_rate"]
 
 
-def test_retrieve_provider_discount(client):
-    provider_discount = ProviderDiscountFactory.create()
-    url = f"{ENDPOINT}{provider_discount.id}/"
+@pytest.mark.django_db
+def test_retrieve_provider_discount(client, create_provider_discount):
+    url = f"{ENDPOINT}{create_provider_discount.id}/"
     expected_json = {
-        "id": provider_discount.id,
-        "discount_name": provider_discount.discount_name,
-        "discount_rate": provider_discount.discount_rate,
+        "id": create_provider_discount.id,
+        "discount_name": create_provider_discount.discount_name,
+        "discount_rate": create_provider_discount.discount_rate,
     }
     response = client.get(url)
+    data = response.data
     assert response.status_code == 200
-    assert json.loads(response.content) == expected_json
+    assert data == expected_json
 
 
-def test_update_provider_discount(client):
-    old_provider_discount = ProviderDiscountFactory.create()
-    new_provider_discount = ProviderDiscountFactory.build()
-    new_provider_discount = {
-        "discount_name": new_provider_discount.discount_name,
-        "discount_rate": new_provider_discount.discount_rate,
+@pytest.mark.django_db
+def test_update_provider_discount(
+    client, create_provider_discount, build_provider_discount
+):
+    payload = {
+        "discount_name": build_provider_discount.discount_name,
+        "discount_rate": build_provider_discount.discount_rate,
     }
-
-    url = f"{ENDPOINT}{old_provider_discount.id}/"
+    url = f"{ENDPOINT}{create_provider_discount.id}/"
     response = client.put(
-        url,
-        new_provider_discount,
+        url, data=json.dumps(payload), content_type="application/json"
     )
-    print(new_provider_discount)
+    data = response.data
     assert response.status_code == 200
-    assert json.loads(response.content) == new_provider_discount
+    assert data["discount_name"] == payload["discount_name"]
+    assert data["discount_rate"] == payload["discount_rate"]
 
 
-def test_delete_provider_discount(client):
-    provider_discount = ProviderDiscountFactory.create()
-    url = f"{ENDPOINT}{provider_discount.id}/"
-
+@pytest.mark.django_db
+def test_delete_provider_discount(client, create_provider_discount):
+    url = f"{ENDPOINT}{create_provider_discount.id}/"
     response = client.delete(url)
 
     assert response.status_code == 204

@@ -26,7 +26,7 @@ class CarShowRoomView(
     queryset = CarShowRoom.objects.filter(is_active=True).prefetch_related(
         "cars", "user"
     )
-    permission_classes = [IsCarShowroomOrReadOnly]
+    # permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -34,14 +34,14 @@ class CarShowRoomView(
         serializer = CarShowRoomSerializer(car_showroom)
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        if request.user.is_car_showroom:
-            car_showroom = self.request.data
-            serializer = self.serializer_class(data=car_showroom)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_403_FORBIDDEN)
+    # def create(self, request, *args, **kwargs):
+    #     if request.user.is_car_showroom:
+    #         car_showroom = self.request.data
+    #         serializer = self.serializer_class(data=car_showroom)
+    #         serializer.is_valid(raise_exception=True)
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(status=status.HTTP_403_FORBIDDEN)
 
     @action(
         detail=True, methods=["delete"], url_path=f"", permission_classes=[IsAdminUser]
@@ -56,4 +56,4 @@ class SellModelView(viewsets.ModelViewSet):
     queryset = SellModel.objects.prefetch_related(
         "discount", "season_discount", "car_showroom", "provider", "car"
     )
-    permission_classes = [IsCarShowroomOrReadOnly]
+    # permission_classes = [IsCarShowroomOrReadOnly]

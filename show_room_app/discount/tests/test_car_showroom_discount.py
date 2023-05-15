@@ -1,15 +1,13 @@
 import pytest
 import json
-
 from discount.models import CarShowRoomDiscount
 from discount.serializer import CarShowRoomDiscountSerializer
-from discount.tests.factories import CarShowRoomDiscountFactory
 
 ENDPOINT = "/api/v1_discount/car_showroom_discount/"
-pytestmark = pytest.mark.django_db
 
 
-def test_car_showroom_discount_list(client):
+@pytest.mark.django_db
+def test_car_showroom_list(client):
     response = client.get(ENDPOINT)
     car_showroom_discount = CarShowRoomDiscount.objects.all()
     expected_data = CarShowRoomDiscountSerializer(car_showroom_discount, many=True).data
@@ -17,59 +15,54 @@ def test_car_showroom_discount_list(client):
     assert response.data == expected_data
 
 
-def test_create_car_showroom_discount(client):
-    car_showroom_discount = CarShowRoomDiscountFactory.build()
+@pytest.mark.django_db
+def test_create_car_showroom(client, build_car_showroom):
     expected_json = {
-        "discount_name": car_showroom_discount.discount_name,
-        "discount_rate": car_showroom_discount.discount_rate,
+        "discount_name": build_car_showroom.discount_name,
+        "discount_rate": build_car_showroom.discount_rate,
     }
     response = client.post(ENDPOINT, data=expected_json)
+    data = response.data
     assert response.status_code == 201
-    assert (
-        json.loads(response.content)["discount_name"]
-        == car_showroom_discount.discount_name
-    )
-    assert (
-        json.loads(response.content)["discount_rate"]
-        == car_showroom_discount.discount_rate
-    )
+    assert data["discount_name"] == expected_json["discount_name"]
+    assert data["discount_rate"] == expected_json["discount_rate"]
 
 
-def test_retrieve_car_showroom_discount(client):
-    car_showroom_discount = CarShowRoomDiscountFactory.create()
-    url = f"{ENDPOINT}{car_showroom_discount.id}/"
+@pytest.mark.django_db
+def test_retrieve_car_showroom_discount(client, create_car_showroom_discount):
+    url = f"{ENDPOINT}{create_car_showroom_discount.id}/"
     expected_json = {
-        "id": car_showroom_discount.id,
-        "discount_name": car_showroom_discount.discount_name,
-        "discount_rate": car_showroom_discount.discount_rate,
+        "id": create_car_showroom_discount.id,
+        "discount_name": create_car_showroom_discount.discount_name,
+        "discount_rate": create_car_showroom_discount.discount_rate,
     }
     response = client.get(url)
+    data = response.data
     assert response.status_code == 200
-    assert json.loads(response.content) == expected_json
+    assert data == expected_json
 
 
-def test_update_car_showroom_discount(client):
-    old_car_showroom_discount = CarShowRoomDiscountFactory.create()
-    new_car_showroom_discount = CarShowRoomDiscountFactory.build()
-    new_car_showroom_discount = {
-        "discount_name": new_car_showroom_discount.discount_name,
-        "discount_rate": new_car_showroom_discount.discount_rate,
+@pytest.mark.django_db
+def test_update_car_showroom_discount(
+    client, create_car_showroom_discount, build_car_showroom_discount
+):
+    payload = {
+        "discount_name": build_car_showroom_discount.discount_name,
+        "discount_rate": build_car_showroom_discount.discount_rate,
     }
-
-    url = f"{ENDPOINT}{old_car_showroom_discount.id}/"
+    url = f"{ENDPOINT}{create_car_showroom_discount.id}/"
     response = client.put(
-        url,
-        new_car_showroom_discount,
+        url, data=json.dumps(payload), content_type="application/json"
     )
-    print(new_car_showroom_discount)
+    data = response.data
     assert response.status_code == 200
-    assert json.loads(response.content) == new_car_showroom_discount
+    assert data["discount_name"] == payload["discount_name"]
+    assert data["discount_rate"] == payload["discount_rate"]
 
 
-def test_delete_car_showroom_discount(client):
-    car_showroom_discount = CarShowRoomDiscountFactory.create()
-    url = f"{ENDPOINT}{car_showroom_discount.id}/"
-
+@pytest.mark.django_db
+def test_delete_provider_discount(client, create_car_showroom_discount):
+    url = f"{ENDPOINT}{create_car_showroom_discount.id}/"
     response = client.delete(url)
 
     assert response.status_code == 204

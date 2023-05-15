@@ -5,7 +5,7 @@ from rest_framework import mixins
 from rest_framework.response import Response
 
 from cars.permission import IsAdminUserOrReadOnly
-from discount.models import SeasonDiscount, ProviderDiscount
+from discount.models import SeasonDiscount, ProviderDiscount, CarShowRoomDiscount
 from discount.serializer import (
     SeasonDiscountSerializer,
     ProviderDiscountSerializer,
@@ -42,7 +42,7 @@ class ProviderDiscountView(
 ):
     serializer_class = ProviderDiscountSerializer
     queryset = ProviderDiscount.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
+    # permission_classes = [IsAdminUserOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -60,8 +60,8 @@ class CarShowRoomDiscountView(
     viewsets.GenericViewSet,
 ):
     serializer_class = CarShowRoomDiscountSerializer
-    queryset = SeasonDiscount.objects.all()
-    permission_classes = [IsAdminUserOrReadOnly]
+    queryset = CarShowRoomDiscount.objects.all()
+    # permission_classes = [IsAdminUserOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
