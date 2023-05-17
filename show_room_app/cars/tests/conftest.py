@@ -2,13 +2,17 @@ import pytest
 from .factories import CarFactory
 
 
-@pytest.fixture
+@pytest.fixture()
 def create_car():
-    create_car = CarFactory.create()
-    return create_car
+    def car(**kwargs):
+        return CarFactory(**kwargs)
+
+    return car
 
 
-@pytest.fixture
+@pytest.fixture()
 def build_car():
-    build_car = CarFactory.build()
-    return build_car
+    def car(**kwargs):
+        return CarFactory.build(**kwargs)
+
+    return car

@@ -21,6 +21,7 @@ class CarShowRoomDiscountFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CarShowRoomDiscount
 
+    id = factory.Sequence(lambda n: n + 1)
     discount_name = faker.name()
     discount_rate = random.randint(0, 100)
 

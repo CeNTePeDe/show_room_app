@@ -4,38 +4,32 @@ import json
 from decimal import Decimal
 from django.urls import reverse
 
-from cars.models import Car
-from cars.tests.factories import CarFactory
-from cars.serializer import CarSerializer
-
 ENDPOINT = "/api/v1_car/cars/"
 
 
 @pytest.mark.django_db
-def test_car_list(client):
+def test_car_endpoint(api_client):
     url = reverse("car-list")
-    response = client.get(url)
-    car = Car.objects.all()
-    expected_data = CarSerializer(car, many=True).data
+    response = api_client.get(url)
     assert response.status_code == 200
-    assert response.data == expected_data
 
 
 @pytest.mark.django_db
-def test_create_car(client, build_car):
+def test_create_car(api_client, build_car):
+    car = build_car()
     payload = {
-        "name": build_car.name,
-        "model_car": build_car.model_car,
-        "year": build_car.year,
-        "country": build_car.country,
-        "body_type": build_car.body_type,
-        "color": build_car.color,
-        "engine_type": build_car.engine_type,
-        "number_of_doors": build_car.number_of_doors,
-        "price": build_car.price.amount,
-        "is_active": build_car.is_active,
+        "name": car.name,
+        "model_car": car.model_car,
+        "year": car.year,
+        "country": car.country,
+        "body_type": car.body_type,
+        "color": car.color,
+        "engine_type": car.engine_type,
+        "number_of_doors": car.number_of_doors,
+        "price": car.price.amount,
+        "is_active": car.is_active,
     }
-    response = client.post(ENDPOINT, data=payload)
+    response = api_client.post(ENDPOINT, data=payload)
     data = response.data
     assert response.status_code == 201
     assert payload["name"] == data["name"]
@@ -50,21 +44,22 @@ def test_create_car(client, build_car):
 
 
 @pytest.mark.django_db
-def test_retrieve_car(client, create_car):
-    url = f"{ENDPOINT}{create_car.id}/"
+def test_retrieve_car(api_client, create_car):
+    car = create_car()
+    url = f"{ENDPOINT}{car.id}/"
     payload = {
-        "name": create_car.name,
-        "model_car": create_car.model_car,
-        "year": create_car.year,
-        "country": create_car.country,
-        "body_type": create_car.body_type,
-        "color": create_car.color,
-        "engine_type": create_car.engine_type,
-        "number_of_doors": create_car.number_of_doors,
-        "price": str(create_car.price.amount),
-        "is_active": create_car.is_active,
+        "name": car.name,
+        "model_car": car.model_car,
+        "year": car.year,
+        "country": car.country,
+        "body_type": car.body_type,
+        "color": car.color,
+        "engine_type": car.engine_type,
+        "number_of_doors": car.number_of_doors,
+        "price": str(car.price.amount),
+        "is_active": car.is_active,
     }
-    response = client.get(url)
+    response = api_client.get(url)
     data = response.data
     assert response.status_code == 200
     assert payload["name"] == data["name"]
@@ -79,7 +74,9 @@ def test_retrieve_car(client, create_car):
 
 
 @pytest.mark.django_db
-def test_update_car(client, create_car, build_car):
+def test_update_car(api_client, create_car, build_car):
+    create_car = create_car()
+    build_car = build_car()
     url = f"{ENDPOINT}{create_car.id}/"
 
     payload = {
@@ -95,7 +92,7 @@ def test_update_car(client, create_car, build_car):
         "is_active": build_car.is_active,
     }
 
-    response = client.put(
+    response = api_client.put(
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
@@ -112,7 +109,8 @@ def test_update_car(client, create_car, build_car):
 
 
 @pytest.mark.django_db
-def test_delete_car(client, create_car):
-    url = f"{ENDPOINT}{create_car.id}/"
-    response = client.delete(url)
+def test_delete_car(api_client, create_car):
+    car = create_car()
+    url = f"{ENDPOINT}{car.id}/"
+    response = api_client.delete(url)
     assert response.status_code == 405

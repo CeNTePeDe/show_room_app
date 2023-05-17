@@ -5,7 +5,7 @@ from car_showroom.models import CarShowRoom, SellModel
 
 
 class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    cars = serializers.StringRelatedField(many=True, read_only=True)
+    # cars = serializers.StringRelatedField(many=True, read_only=True)
     # user = serializers.CharField(source="user.username")
 
     class Meta:
@@ -24,11 +24,11 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class SellModelSerializer(serializers.ModelSerializer):
-    car_showroom = serializers.CharField(source="car_showroom.name")
-    discount = serializers.CharField(source="discount.discount_name")
-    season_discount = serializers.StringRelatedField(source="discount.discount_name")
-    provider = serializers.CharField(source="provider.name")
-    car = serializers.CharField(source="car.name")
+    # car_showroom = serializers.CharField(source="car_showroom.name")
+    # discount = serializers.CharField(source="discount.discount_name")
+    # season_discount = serializers.StringRelatedField(source="discount.discount_name")
+    # provider = serializers.CharField(source="provider.name")
+    # car = serializers.CharField(source="car.name")
 
     class Meta:
         model = SellModel
@@ -38,4 +38,6 @@ class SellModelSerializer(serializers.ModelSerializer):
             "provider",
             "discount",
             "season_discount",
+            "margin",
+            "number_of_cars",
         )

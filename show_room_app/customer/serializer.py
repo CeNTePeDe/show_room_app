@@ -8,7 +8,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ("user", "username", "balance", "purchases", "max_price")
+        fields = ("user", "username", "balance", "purchases", "max_price", "is_active")
 
 
 class TransactionSerializer(serializers.ModelSerializer):

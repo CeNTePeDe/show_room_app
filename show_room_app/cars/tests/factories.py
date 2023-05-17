@@ -17,7 +17,7 @@ class CarFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Car
 
-    # id = factory.Sequence(lambda n: n + 1)
+    id = factory.Sequence(lambda n: n + 1)
     name = fake.vehicle_make()
     model_car = fake.vehicle_model()
     image = ""

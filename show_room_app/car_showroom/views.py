@@ -4,7 +4,7 @@ from rest_framework import viewsets, status, mixins
 
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from car_showroom.models import CarShowRoom, SellModel
@@ -26,7 +26,7 @@ class CarShowRoomView(
     queryset = CarShowRoom.objects.filter(is_active=True).prefetch_related(
         "cars", "user"
     )
-    # permission_classes = [IsCarShowroomOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -35,7 +35,7 @@ class CarShowRoomView(
         return Response(serializer.data)
 
     # def create(self, request, *args, **kwargs):
-    #     if request.user.is_car_showroom:
+    #     if  request.user.is_authenticated:
     #         car_showroom = self.request.data
     #         serializer = self.serializer_class(data=car_showroom)
     #         serializer.is_valid(raise_exception=True)
@@ -56,4 +56,3 @@ class SellModelView(viewsets.ModelViewSet):
     queryset = SellModel.objects.prefetch_related(
         "discount", "season_discount", "car_showroom", "provider", "car"
     )
-    # permission_classes = [IsCarShowroomOrReadOnly]

@@ -1,24 +1,78 @@
 import pytest
-from faker import Faker
-from rest_framework.test import APIClient
+from django.urls import reverse
 
-client = APIClient()
-fake = Faker()
+
+ENDPOINT = "/api/v1_user/create/"
 
 
 @pytest.mark.django_db
-def test_register_user():
-    url = "/api/v1_user/create/"
+def test_user_endpoint(client):
+    url = reverse("user-list")
+    response = client.get(url)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_create_user_customer(client, build_user_customer):
+    user = build_user_customer()
     payload = {
-        "email": "fake_email@email.ru",
-        "username": "fake_user",
+        "username": user.username,
         "password": "1111",
         "password_confirm": "1111",
-        "is_customer": True,
-        "is_provider": False,
-        "is_car_showroom": False,
+        "email": user.email,
+        "is_customer": user.is_customer,
+        "is_provider": user.is_provider,
+        "is_car_showroom": user.is_car_showroom,
     }
-    response = client.post(url, payload)
+    response = client.post(ENDPOINT, data=payload)
     data = response.data
-    assert payload["email"] == data["email"]
-    assert payload["username"] == data["username"]
+    assert response.status_code == 201
+    assert data["username"] == payload["username"]
+    assert data["email"] == payload["email"]
+    assert data["is_customer"] == payload["is_customer"]
+    assert data["is_provider"] == payload["is_provider"]
+    assert data["is_car_showroom"] == payload["is_car_showroom"]
+
+
+@pytest.mark.django_db
+def test_create_user_car_showroom(client, build_user_car_showroom):
+    user = build_user_car_showroom()
+    payload = {
+        "username": user.username,
+        "password": "1111",
+        "password_confirm": "1111",
+        "email": user.email,
+        "is_customer": user.is_customer,
+        "is_provider": user.is_provider,
+        "is_car_showroom": user.is_car_showroom,
+    }
+    response = client.post(ENDPOINT, data=payload)
+    data = response.data
+    assert response.status_code == 201
+    assert data["username"] == payload["username"]
+    assert data["email"] == payload["email"]
+    assert data["is_customer"] == payload["is_customer"]
+    assert data["is_provider"] == payload["is_provider"]
+    assert data["is_car_showroom"] == payload["is_car_showroom"]
+
+
+@pytest.mark.django_db
+def test_create_user_provider(client, build_user_provider):
+    user = build_user_provider()
+    payload = {
+        "username": user.username,
+        "password": "1111",
+        "password_confirm": "1111",
+        "email": user.email,
+        "is_customer": user.is_customer,
+        "is_provider": user.is_provider,
+        "is_car_showroom": user.is_car_showroom,
+    }
+    response = client.post(ENDPOINT, data=payload)
+    data = response.data
+    assert response.status_code == 201
+    assert data["username"] == payload["username"]
+    assert data["email"] == payload["email"]
+    assert data["is_customer"] == payload["is_customer"]
+    assert data["is_provider"] == payload["is_provider"]
+    assert data["is_car_showroom"] == payload["is_car_showroom"]

@@ -4,7 +4,6 @@ import random
 import factory
 
 from cars.tests.factories import CarFactory
-from core.default_value import jsonfield_default_value
 from core.tests.factories import JSONFactory
 from provider.models import Provider, CarProvider
 from faker import Faker
@@ -18,7 +17,7 @@ class ProviderFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Provider
 
-    name = faker.name()
+    name = factory.Faker("name")
     year = int(faker.year())
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
     characteristic = factory.Dict({}, dict_factory=JSONFactory)

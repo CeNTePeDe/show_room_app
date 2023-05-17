@@ -1,35 +1,40 @@
 import pytest
 
 from cars.tests.factories import CarFactory
-from user.tests.factories import UserFactory
 from .factories import ProviderFactory, CarProviderFactory
 
 
-@pytest.fixture
-def create_provider():
-    user = UserFactory()
-    create_provider = ProviderFactory.create(user=user)
-    return create_provider
+@pytest.fixture()
+def create_provider(create_user_provider):
+    def provider(**kwargs):
+        return ProviderFactory(user=create_user_provider(), **kwargs)
+
+    return provider
 
 
 @pytest.fixture
-def build_provider():
-    user = UserFactory()
-    build_provider = ProviderFactory.build(user=user)
-    return build_provider
+def build_provider(create_user_provider):
+    def provider(**kwargs):
+        return ProviderFactory.build(user=create_user_provider(), **kwargs)
+
+    return provider
 
 
-@pytest.fixture
-def create_car_provider():
-    provider = ProviderFactory()
-    car = CarFactory()
-    create_car_provider = CarProviderFactory.create(car=car, provider=provider)
-    return create_car_provider
+@pytest.fixture()
+def create_car_provider(create_provider):
+    def car_provider(**kwargs):
+        return CarProviderFactory(
+            car=CarFactory(), provider=create_provider(), **kwargs
+        )
+
+    return car_provider
 
 
-@pytest.fixture
-def build_car_provider():
-    provider = ProviderFactory()
-    car = CarFactory()
-    build_car_provider = CarProviderFactory.build(car=car, provider=provider)
-    return build_car_provider
+@pytest.fixture()
+def build_car_provider(create_provider):
+    def car_provider(**kwargs):
+        return CarProviderFactory.build(
+            car=CarFactory(), provider=create_provider(), **kwargs
+        )
+
+    return car_provider

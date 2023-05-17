@@ -5,39 +5,44 @@ ENDPOINT = "/api/v1_car_showroom/car_showroom/"
 
 
 @pytest.mark.django_db
-def test_car_showroom_get_endpoint(client):
-    response = client.get(ENDPOINT)
+def test_car_showroom_get_endpoint(api_client):
+    response = api_client.get(ENDPOINT)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_create_car_showroom(client, build_car_showroom):
+def test_create_car_showroom(api_client, build_car_showroom):
+    car_showroom = build_car_showroom()
     payload = {
-        "name": build_car_showroom.name,
-        "year": build_car_showroom.year,
-        "balance": str(build_car_showroom.balance.amount),
-        "country": build_car_showroom.country.code,
-        "characteristic": build_car_showroom.characteristic,
-        "user": build_car_showroom.user.id,
-        "is_active": build_car_showroom.is_active,
+        "name": car_showroom.name,
+        "year": car_showroom.year,
+        "balance": str(car_showroom.balance.amount),
+        "country": car_showroom.country.code,
+        "characteristic": car_showroom.characteristic,
+        "user": car_showroom.user.id,
+        "is_active": car_showroom.is_active,
     }
-    response = client.post(ENDPOINT, data=payload, content_type="application/json")
+    print(payload)
+    response = api_client.post(
+        ENDPOINT, data=json.dumps(payload), content_type="application/json"
+    )
     assert response.status_code == 201
 
 
 @pytest.mark.django_db
-def test_retrieve_car_showroom(client, create_car_showroom):
-    url = f"{ENDPOINT}{create_car_showroom.user.id}/"
+def test_retrieve_car_showroom(api_client, create_car_showroom):
+    car_showroom = create_car_showroom()
+    url = f"{ENDPOINT}{car_showroom.user.id}/"
     payload = {
-        "name": create_car_showroom.name,
-        "year": create_car_showroom.year,
-        "balance": create_car_showroom.balance.amount,
-        "country": create_car_showroom.country.code,
-        "characteristic": create_car_showroom.characteristic,
-        "is_active": create_car_showroom.is_active,
-        "user": create_car_showroom.user.id,
+        "name": car_showroom.name,
+        "year": car_showroom.year,
+        "balance": car_showroom.balance.amount,
+        "country": car_showroom.country.code,
+        "characteristic": car_showroom.characteristic,
+        "is_active": car_showroom.is_active,
+        "user": car_showroom.user.id,
     }
-    response = client.get(url)
+    response = api_client.get(url)
     data = response.data
     assert response.status_code == 200
     assert payload["name"] == data["name"]
@@ -48,27 +53,29 @@ def test_retrieve_car_showroom(client, create_car_showroom):
 
 
 @pytest.mark.django_db
-def test_update_car_showroom(client, create_car_showroom, build_car_showroom):
+def test_update_car_showroom(api_client, create_car_showroom, build_car_showroom):
+    create_car_showroom = create_car_showroom()
+    build_car_showroom = build_car_showroom()
     payload = {
         "name": build_car_showroom.name,
         "year": build_car_showroom.year,
         "country": build_car_showroom.country.name,
         "characteristic": build_car_showroom.characteristic,
         "balance": str(build_car_showroom.balance.amount),
-        "user": build_car_showroom.user.id,
         "is_active": build_car_showroom.is_active,
+        "user": create_car_showroom.user.id,
     }
     url = f"{ENDPOINT}{create_car_showroom.user.id}/"
-
-    response = client.put(
+    print(payload)
+    response = api_client.put(
         url, data=json.dumps(payload), content_type="application/json"
     )
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_delete_car_showroom(client,create_car_showroom):
-    url = f"{ENDPOINT}{create_car_showroom.user.id}/"
-    response = client.delete(url)
+def test_delete_car_showroom(api_client, create_car_showroom):
+    car_showroom = create_car_showroom()
+    url = f"{ENDPOINT}{car_showroom.user.id}/"
+    response = api_client.delete(url)
     assert response.status_code == 405
-
