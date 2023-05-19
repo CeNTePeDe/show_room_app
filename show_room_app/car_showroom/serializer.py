@@ -2,11 +2,15 @@ from rest_framework import serializers
 from django_countries.serializers import CountryFieldMixin
 
 from car_showroom.models import CarShowRoom, SellModel
+from cars.serializer import CarSerializer
+from discount.serializer import SeasonDiscountSerializer, CarShowRoomDiscountSerializer
+from provider.serializer import ProviderSerializer
+from user.serializer import UserSerializer
 
 
 class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    # cars = serializers.StringRelatedField(many=True, read_only=True)
-    # user = serializers.CharField(source="user.username")
+    cars = CarSerializer(many=True, read_only=True)
+    user = UserSerializer()
 
     class Meta:
         model = CarShowRoom
@@ -24,11 +28,11 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class SellModelSerializer(serializers.ModelSerializer):
-    # car_showroom = serializers.CharField(source="car_showroom.name")
-    # discount = serializers.CharField(source="discount.discount_name")
-    # season_discount = serializers.StringRelatedField(source="discount.discount_name")
-    # provider = serializers.CharField(source="provider.name")
-    # car = serializers.CharField(source="car.name")
+    car_showroom = CarShowRoomSerializer()
+    discount = CarShowRoomDiscountSerializer()
+    season_discount = SeasonDiscountSerializer()
+    provider = ProviderSerializer()
+    car = CarSerializer()
 
     class Meta:
         model = SellModel

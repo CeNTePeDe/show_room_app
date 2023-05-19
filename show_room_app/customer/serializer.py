@@ -1,21 +1,23 @@
 from rest_framework import serializers
 
+from car_showroom.serializer import CarShowRoomSerializer
 from customer.models import Customer, Transaction
-
-
-class CustomerSerializer(serializers.ModelSerializer):
-    # purchases = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = Customer
-        fields = ("user", "username", "balance", "purchases", "max_price", "is_active")
+from discount.serializer import CarShowRoomDiscountSerializer, SeasonDiscountSerializer
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    # car_showroom = serializers.StringRelatedField(read_only=True)
-    # discount = serializers.StringRelatedField(read_only=True)
-    # season_discount = serializers.StringRelatedField(read_only=True)
+    car_showroom = CarShowRoomSerializer()
+    discount = CarShowRoomDiscountSerializer()
+    season_discount = SeasonDiscountSerializer()
 
     class Meta:
         model = Transaction
         fields = ("car_showroom", "price", "date", "discount", "season_discount")
+
+
+class CustomerSerializer(serializers.ModelSerializer):
+    purchases = TransactionSerializer()
+
+    class Meta:
+        model = Customer
+        fields = ("user", "username", "balance", "purchases", "max_price", "is_active")

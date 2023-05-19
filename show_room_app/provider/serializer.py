@@ -1,26 +1,14 @@
 from rest_framework import serializers
 from django_countries.serializers import CountryFieldMixin
 
+from cars.serializer import CarSerializer
 from provider.models import Provider, CarProvider
-
-
-class CarProviderSerializer(serializers.ModelSerializer):
-    # car = serializers.CharField(source="car.name")
-    # provider = serializers.CharField(source="provider.name")
-
-    class Meta:
-        model = CarProvider
-        fields = (
-            "provider",
-            "number_of_cars",
-            "margin",
-            "car",
-        )
+from user.serializer import UserSerializer
 
 
 class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    cars = serializers.StringRelatedField(many=True, read_only=True)
-    # user = serializers.CharField(source="user.username")
+    cars = CarSerializer(many=True, read_only=True)
+    user = UserSerializer()
 
     class Meta:
         model = Provider
@@ -32,4 +20,18 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "cars",
             "user",
             "is_active",
+        )
+
+
+class CarProviderSerializer(serializers.ModelSerializer):
+    car = CarSerializer()
+    provider = ProviderSerializer()
+
+    class Meta:
+        model = CarProvider
+        fields = (
+            "provider",
+            "car",
+            "number_of_cars",
+            "margin",
         )

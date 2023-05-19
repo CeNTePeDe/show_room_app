@@ -13,30 +13,48 @@ def test_provider_get_endpoint(api_client):
 
 @pytest.mark.django_db
 def test_create_provider(api_client, build_provider, create_user_provider):
-    api_client.force_authenticate(user=create_user_provider())
     provider = build_provider()
+
     payload = {
         "name": provider.name,
         "year": provider.year,
         "country": provider.country.code,
         "characteristic": provider.characteristic,
-        "user": provider.user.id,
+        "user": {
+            "id": provider.user.id,
+            "email": provider.user.email,
+            "username": provider.user.username,
+            "is_customer": provider.user.is_customer,
+            "is_provider": provider.user.is_provider,
+            "is_car_showroom": provider.user.is_car_showroom,
+        },
         "is_active": provider.is_active,
     }
-    response = api_client.post(ENDPOINT, data=payload, content_type="application/json")
+    print(payload)
+    response = api_client.post(
+        ENDPOINT, data=json.dumps(payload), content_type="application/json"
+    )
     assert response.status_code == 201
 
 
 @pytest.mark.django_db
-def test_retrieve_provider(api_client, create_provider):
+def test_retrieve_provider(api_client, create_provider, create_user_provider):
     provider = create_provider()
+
     url = f"{ENDPOINT}{provider.user.id}/"
     payload = {
         "name": provider.name,
         "year": provider.year,
         "country": provider.country.code,
         "characteristic": provider.characteristic,
-        "user": provider.user.id,
+        "user": {
+            "id": provider.user.id,
+            "email": provider.user.email,
+            "username": provider.user.username,
+            "is_customer": provider.user.is_customer,
+            "is_provider": provider.user.is_provider,
+            "is_car_showroom": provider.user.is_car_showroom,
+        },
         "is_active": provider.is_active,
     }
     response = api_client.get(url)
@@ -47,21 +65,29 @@ def test_retrieve_provider(api_client, create_provider):
     assert payload["characteristic"] == data["characteristic"]
     assert payload["is_active"] == data["is_active"]
     assert payload["user"] == data["user"]
+    assert payload["is_active"] == data["is_active"]
 
 
 @pytest.mark.django_db
 def test_update_provider(api_client, build_provider, create_provider):
     build_provider = build_provider()
-    create_provider = create_provider()
+    provider = create_provider()
     payload = {
         "name": build_provider.name,
         "year": build_provider.year,
         "country": build_provider.country.code,
         "characteristic": build_provider.characteristic,
-        "user": create_provider.user.id,
+        "user": {
+            "id": provider.user.id,
+            "email": provider.user.email,
+            "username": provider.user.username,
+            "is_customer": provider.user.is_customer,
+            "is_provider": provider.user.is_provider,
+            "is_car_showroom": provider.user.is_car_showroom,
+        },
         "is_active": build_provider.is_active,
     }
-    url = f"{ENDPOINT}{create_provider.user.id}/"
+    url = f"{ENDPOINT}{provider.user.id}/"
     response = api_client.put(
         url, data=json.dumps(payload), content_type="application/json"
     )

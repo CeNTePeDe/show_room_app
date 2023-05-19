@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
@@ -5,7 +6,24 @@ from rest_framework.validators import UniqueValidator
 from user.models import User
 
 
-class RegisterSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "email",
+            "username",
+            "is_customer",
+            "is_provider",
+            "is_car_showroom",
+        )
+
+
+class UserRegisterationSerializer(serializers.ModelSerializer):
+    """
+    Serializer class to serialize registration requests and create a new user.
+    """
+
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(queryset=User.objects.all())]
     )
@@ -56,17 +74,22 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            "id",
-            "email",
-            "username",
-            "is_customer",
-            "is_provider",
-            "is_car_showroom",
-        ]
+class UserLoginSerializer(serializers.ModelSerializer):
+    """
+    Serializer class to authenticate users with email and password.
+    """
+
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        user = authenticate(**data)
+        if user and user.is_active:
+            return user
+        raise serializers.ValidationError("Incorrect Credentials")
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):

@@ -21,7 +21,7 @@ class ProviderView(
 ):
     queryset = Provider.objects.prefetch_related("cars", "user").filter(is_active=True)
     serializer_class = ProviderSerializer
-    permission_classes = [IsProviderOrReadOnly]
+    # permission_classes = [IsProviderOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
