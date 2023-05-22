@@ -26,6 +26,7 @@ def test_create_sell_model(api_client, build_sell_model):
     response = api_client.post(
         ENDPOINT, data=json.dumps(payload), content_type="application/json"
     )
+
     assert response.status_code == 201
 
 
@@ -42,8 +43,11 @@ def test_retrieve_sell_model(api_client, create_sell_model):
         "margin": sell_model.margin,
         "number_of_cars": sell_model.number_of_cars,
     }
+
     response = api_client.get(url)
     data = response.data
+
+
     assert response.status_code == 200
     assert payload["car"] == data["car"]
     assert payload["car_showroom"] == data["car_showroom"]
@@ -72,6 +76,7 @@ def test_update_sell_model(api_client, create_sell_model, build_sell_model):
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
+
     assert response.status_code == 200
     assert payload["car"] == data["car"]
     assert payload["car_showroom"] == data["car_showroom"]
@@ -87,4 +92,5 @@ def test_delete_sell_model(api_client, create_sell_model):
     sell_model = create_sell_model()
     url = f"{ENDPOINT}{sell_model.id}/"
     response = api_client.delete(url)
+
     assert response.status_code == 204

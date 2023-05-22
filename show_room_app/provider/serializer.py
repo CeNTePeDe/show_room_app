@@ -3,12 +3,13 @@ from django_countries.serializers import CountryFieldMixin
 
 from cars.serializer import CarSerializer
 from provider.models import Provider, CarProvider
+from user.models import User
 from user.serializer import UserSerializer
 
 
 class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
     cars = CarSerializer(many=True, read_only=True)
-    user = UserSerializer()
+    user = UserSerializer(required=False)
 
     class Meta:
         model = Provider
@@ -22,11 +23,16 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "is_active",
         )
 
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
+        user = UserSerializer.create(UserSerializer(), validated_data=user_data)
+        user.save()
+        provider = Provider.objects.create(user=user, **validated_data)
+        provider.save()
+        return provider
+
 
 class CarProviderSerializer(serializers.ModelSerializer):
-    car = CarSerializer()
-    provider = ProviderSerializer()
-
     class Meta:
         model = CarProvider
         fields = (

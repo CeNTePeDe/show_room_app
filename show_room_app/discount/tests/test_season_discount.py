@@ -11,6 +11,7 @@ ENDPOINT = "/api/v1_discount/season_discount/"
 @pytest.mark.django_db
 def test_season_discount_list(api_client):
     response = api_client.get(ENDPOINT)
+
     assert response.status_code == 200
 
 
@@ -25,6 +26,7 @@ def test_create_season_discount(api_client, build_season_discount):
     }
     response = api_client.post(ENDPOINT, data=expected_json)
     data = response.data
+
     assert response.status_code == 201
     assert data["discount_name"] == expected_json["discount_name"]
     assert data["date_start"] == expected_json["date_start"]
@@ -44,6 +46,7 @@ def test_retrieve_season_discount(api_client, create_season_discount):
         "discount_rate": season_discount.discount_rate,
     }
     response = api_client.get(url)
+
     assert response.status_code == 200
     assert json.loads(response.content) == expected_json
 
@@ -66,6 +69,7 @@ def test_update_season_discount(
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
+
     assert response.status_code == 200
     assert data["discount_name"] == payload["discount_name"]
     assert data["date_start"] == payload["date_start"]

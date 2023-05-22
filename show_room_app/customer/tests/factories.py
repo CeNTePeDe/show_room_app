@@ -4,12 +4,10 @@ import factory
 
 from car_showroom.tests.factories import CarShowRoomFactory
 from customer.models import Customer, Transaction
-from faker import Faker
+
 
 from discount.tests.factories import CarShowRoomDiscountFactory, SeasonDiscountFactory
 from user.tests.factories import UserFactory
-
-faker = Faker()
 
 
 class TransactionFactory(factory.django.DjangoModelFactory):
@@ -26,9 +24,8 @@ class CustomerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Customer
 
-    username = faker.name()
+    username = factory.Faker("name")
     balance = Decimal("23.99")
-    purchases = factory.SubFactory(TransactionFactory)
     max_price = Decimal("5413615.00")
     is_active = True
     user = factory.SubFactory(UserFactory)

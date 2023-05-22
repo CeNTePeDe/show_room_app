@@ -9,6 +9,7 @@ ENDPOINT = "/api/v1_discount/car_showroom_discount/"
 @pytest.mark.django_db
 def test_car_showroom_discount_endpoint(api_client):
     response = api_client.get(ENDPOINT)
+
     assert response.status_code == 200
 
 
@@ -21,6 +22,7 @@ def test_create_car_showroom_discount(api_client, build_car_showroom_discount):
     }
     response = api_client.post(ENDPOINT, data=expected_json)
     data = response.data
+
     assert response.status_code == 201
     assert data["discount_name"] == expected_json["discount_name"]
     assert data["discount_rate"] == expected_json["discount_rate"]
@@ -37,6 +39,7 @@ def test_retrieve_car_showroom_discount(api_client, create_car_showroom_discount
     }
     response = api_client.get(url)
     data = response.data
+
     assert response.status_code == 200
     assert data == expected_json
 
@@ -56,6 +59,7 @@ def test_update_car_showroom_discount(
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
+
     assert response.status_code == 200
     assert data["discount_name"] == payload["discount_name"]
     assert data["discount_rate"] == payload["discount_rate"]

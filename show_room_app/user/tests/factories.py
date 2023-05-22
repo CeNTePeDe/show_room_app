@@ -11,9 +11,9 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = User
 
     username = factory.Sequence(lambda n: "john%s" % n)
-    email = faker.email()
-    first_name = faker.first_name()
-    last_name = faker.last_name()
+    email = factory.Faker("email")
+    first_name = factory.Faker("first_name")
+    last_name = factory.Faker("last_name")
     password = "1111"
     password_confirm = "1111"
     is_customer = False

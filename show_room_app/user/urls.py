@@ -15,18 +15,6 @@ router = DefaultRouter()
 router.register(r"user", UserView, basename="user")
 
 
-# urlpatterns = [
-#     path("", include(router.urls)),
-#     path("register/", RegistrationAPIView.as_view({"post": "create"})),
-#     path("login/", LoginAPIView.as_view({"post": "post"}), name="login"),
-#     path("user/", UserAPI.as_view({"get": "get", "post":"update"}), name="me"),
-#     path("logout/", LogoutApi.as_view(), name="logout"),
-#     path(
-#         "change_password/<int:pk>/",
-#         ChangePasswordView.as_view(),
-#         name="auth_change_password",
-#     ),
-# ]
 urlpatterns = [
     path("", include(router.urls)),
     path("register/", RegistrationAPIView.as_view(), name="create-user"),

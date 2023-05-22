@@ -21,13 +21,9 @@ class CustomerView(
 ):
     """Display all customers"""
 
-    queryset = (
-        Customer.objects.filter(is_active=True)
-        .select_related("user")
-        .prefetch_related("purchases")
-    )
+    queryset = Customer.objects.filter(is_active=True).select_related("user")
     serializer_class = CustomerSerializer
-    # permission_classes = [IsCustomerOrReadOnly]
+    permission_classes = [IsCustomerOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -51,10 +47,10 @@ class TransactionView(
     viewsets.GenericViewSet,
 ):
     queryset = Transaction.objects.prefetch_related(
-        "car_showroom", "season_discount", "discount"
+        "car_showroom", "season_discount", "discount", "customer"
     )
     serializer_class = TransactionSerializer
-    # permission_classes = [IsCarShowroomOrReadOnly]
+    permission_classes = [IsCarShowroomOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()

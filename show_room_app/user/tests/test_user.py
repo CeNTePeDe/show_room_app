@@ -9,6 +9,7 @@ ENDPOINT = "/api/v1_user/create/"
 def test_user_endpoint(client):
     url = reverse("user-list")
     response = client.get(url)
+
     assert response.status_code == 200
 
 
@@ -26,6 +27,7 @@ def test_create_user_customer(client, build_user_customer):
     }
     response = client.post(ENDPOINT, data=payload)
     data = response.data
+
     assert response.status_code == 201
     assert data["username"] == payload["username"]
     assert data["email"] == payload["email"]
@@ -48,6 +50,7 @@ def test_create_user_car_showroom(client, build_user_car_showroom):
     }
     response = client.post(ENDPOINT, data=payload)
     data = response.data
+
     assert response.status_code == 201
     assert data["username"] == payload["username"]
     assert data["email"] == payload["email"]
@@ -70,6 +73,7 @@ def test_create_user_provider(client, build_user_provider):
     }
     response = client.post(ENDPOINT, data=payload)
     data = response.data
+
     assert response.status_code == 201
     assert data["username"] == payload["username"]
     assert data["email"] == payload["email"]

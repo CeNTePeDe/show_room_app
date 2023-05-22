@@ -29,8 +29,10 @@ def test_create_car(api_client, build_car):
         "price": car.price.amount,
         "is_active": car.is_active,
     }
+
     response = api_client.post(ENDPOINT, data=payload)
     data = response.data
+
     assert response.status_code == 201
     assert payload["name"] == data["name"]
     assert payload["model_car"] == data["model_car"]
@@ -59,8 +61,10 @@ def test_retrieve_car(api_client, create_car):
         "price": str(car.price.amount),
         "is_active": car.is_active,
     }
+
     response = api_client.get(url)
     data = response.data
+
     assert response.status_code == 200
     assert payload["name"] == data["name"]
     assert payload["model_car"] == data["model_car"]
@@ -96,6 +100,7 @@ def test_update_car(api_client, create_car, build_car):
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
+
     assert response.status_code == 200
     assert payload["name"] == data["name"]
     assert payload["model_car"] == data["model_car"]
@@ -113,4 +118,5 @@ def test_delete_car(api_client, create_car):
     car = create_car()
     url = f"{ENDPOINT}{car.id}/"
     response = api_client.delete(url)
+
     assert response.status_code == 405

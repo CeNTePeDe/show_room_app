@@ -5,17 +5,17 @@ from .factories import ProviderFactory, CarProviderFactory
 
 
 @pytest.fixture()
-def create_provider(create_user_provider):
+def create_provider():
     def provider(**kwargs):
-        return ProviderFactory(user=create_user_provider(), **kwargs)
+        return ProviderFactory(**kwargs)
 
     return provider
 
 
 @pytest.fixture
-def build_provider(create_user_provider):
+def build_provider():
     def provider(**kwargs):
-        return ProviderFactory.build(user=create_user_provider(), **kwargs)
+        return ProviderFactory.build(**kwargs)
 
     return provider
 
@@ -31,10 +31,8 @@ def create_car_provider(create_provider):
 
 
 @pytest.fixture()
-def build_car_provider(create_provider):
+def build_car_provider():
     def car_provider(**kwargs):
-        return CarProviderFactory.build(
-            car=CarFactory(), provider=create_provider(), **kwargs
-        )
+        return CarProviderFactory.build(**kwargs)
 
     return car_provider

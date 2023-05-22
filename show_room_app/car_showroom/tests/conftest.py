@@ -7,19 +7,17 @@ from .factories import CarShowRoomFactory, SellModelFactory
 
 
 @pytest.fixture()
-def create_car_showroom(create_user_car_showroom):
+def create_car_showroom():
     def car_showroom(**kwargs):
-        user = create_user_car_showroom()
-        return CarShowRoomFactory(user=user, **kwargs)
+        return CarShowRoomFactory(**kwargs)
 
     return car_showroom
 
 
 @pytest.fixture
-def build_car_showroom(create_user_car_showroom):
+def build_car_showroom():
     def car_showroom(**kwargs):
-        user = create_user_car_showroom()
-        return CarShowRoomFactory.build(user=user, **kwargs)
+        return CarShowRoomFactory.build(**kwargs)
 
     return car_showroom
 

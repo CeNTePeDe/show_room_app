@@ -2,7 +2,9 @@ import json
 import random
 
 import factory
+from factory import fuzzy
 
+from cars.choice import Color, EnginType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
 from core.tests.factories import JSONFactory
 from provider.models import Provider, CarProvider
@@ -20,7 +22,14 @@ class ProviderFactory(factory.django.DjangoModelFactory):
     name = factory.Faker("name")
     year = int(faker.year())
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
-    characteristic = factory.Dict({}, dict_factory=JSONFactory)
+    characteristic = factory.Dict(
+        {
+            "color": fuzzy.FuzzyChoice(Color),
+            "engine_type": fuzzy.FuzzyChoice(EnginType),
+            "number_of_doors": fuzzy.FuzzyChoice(NumberOfDoor),
+            "body_type": fuzzy.FuzzyChoice(BodyType),
+        }
+    )
     is_active = True
     user = factory.SubFactory(UserFactory)
 

@@ -8,7 +8,6 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = (
         "username",
         "balance",
-        "purchases",
         "max_price",
         "is_active",
         "user",
@@ -22,6 +21,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = (
         "car_showroom",
         "price",
+        "customer",
         "discount",
         "season_discount",
         "date",

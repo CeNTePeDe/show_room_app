@@ -6,23 +6,24 @@ from discount.tests.factories import CarShowRoomDiscountFactory, SeasonDiscountF
 
 
 @pytest.fixture
-def build_transaction(create_user_car_showroom):
+def build_transaction(create_user_car_showroom, create_user_customer):
     def transaction(**kwargs):
         user_car_showroom = create_user_car_showroom()
-        car_showroom = CarShowRoomFactory(user=user_car_showroom)
-        discount = CarShowRoomDiscountFactory()
-        season_discount = SeasonDiscountFactory()
+        user_customer = create_user_customer()
+
         return TransactionFactory.build(
-            car_showroom=car_showroom,
-            discount=discount,
-            season_discount=season_discount,
+            customer=CustomerFactory(user=user_customer),
+            car_showroom=CarShowRoomFactory(user=user_car_showroom),
+            discount=CarShowRoomDiscountFactory(),
+            season_discount=SeasonDiscountFactory(),
+            **kwargs
         )
 
     return transaction
 
 
 @pytest.fixture
-def create_transaction(create_user_car_showroom):
+def create_transaction(create_user_car_showroom, create_user_customer):
     def transaction(**kwargs):
         user_car_showroom = create_user_car_showroom()
         car_showroom = CarShowRoomFactory(user=user_car_showroom)
@@ -30,26 +31,23 @@ def create_transaction(create_user_car_showroom):
             car_showroom=car_showroom,
             discount=CarShowRoomDiscountFactory(),
             season_discount=SeasonDiscountFactory(),
+            **kwargs
         )
 
     return transaction
 
 
 @pytest.fixture
-def build_customer(create_user_customer):
+def build_customer():
     def customer(**kwargs):
-        user = create_user_customer()
-        return CustomerFactory.build(
-            purchases=TransactionFactory(), user=user, **kwargs
-        )
+        return CustomerFactory.build(**kwargs)
 
     return customer
 
 
 @pytest.fixture
-def create_customer(create_user_customer):
+def create_customer():
     def customer(**kwargs):
-        user = create_user_customer()
-        return CustomerFactory(purchases=TransactionFactory(), user=user, **kwargs)
+        return CustomerFactory(**kwargs)
 
     return customer
