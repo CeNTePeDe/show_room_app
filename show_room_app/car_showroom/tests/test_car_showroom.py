@@ -29,11 +29,10 @@ def test_create_car_showroom(api_client, build_car_showroom):
         },
         "is_active": car_showroom.is_active,
     }
-    print(payload)
+
     response = api_client.post(
         ENDPOINT, data=json.dumps(payload), content_type="application/json"
     )
-
     assert response.status_code == 201
 
 
@@ -45,7 +44,7 @@ def test_retrieve_car_showroom(api_client, create_car_showroom):
 
     payload = {
         "name": car_showroom.name,
-        "year": car_showroom.year,
+        "year": int(car_showroom.year),
         "balance": car_showroom.balance.amount,
         "country": car_showroom.country.code,
         "characteristic": car_showroom.characteristic,
@@ -74,7 +73,7 @@ def test_update_car_showroom(api_client, create_car_showroom, build_car_showroom
     build_car_showroom = build_car_showroom()
     payload = {
         "name": build_car_showroom.name,
-        "year": build_car_showroom.year,
+        "year": int(build_car_showroom.year),
         "country": build_car_showroom.country.name,
         "characteristic": build_car_showroom.characteristic,
         "balance": str(build_car_showroom.balance.amount),

@@ -1,4 +1,3 @@
-import json
 import random
 
 import factory
@@ -6,13 +5,10 @@ from factory import fuzzy
 
 from cars.choice import Color, EnginType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
-from core.tests.factories import JSONFactory
 from provider.models import Provider, CarProvider
-from faker import Faker
+
 
 from user.tests.factories import UserFactory
-
-faker = Faker()
 
 
 class ProviderFactory(factory.django.DjangoModelFactory):
@@ -20,7 +16,7 @@ class ProviderFactory(factory.django.DjangoModelFactory):
         model = Provider
 
     name = factory.Faker("name")
-    year = int(faker.year())
+    year = factory.Faker("year")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
     characteristic = factory.Dict(
         {
@@ -44,7 +40,3 @@ class CarProviderFactory(factory.django.DjangoModelFactory):
     number_of_cars = random.randint(0, 100)
 
 
-class ProviderWithCarFactory(ProviderFactory):
-    car_provider = factory.RelatedFactory(
-        CarProviderFactory, factory_related_name="provider"
-    )

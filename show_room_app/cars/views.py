@@ -3,13 +3,14 @@ from rest_framework import status
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
-
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 from cars.models import Car
 from cars.permission import IsAdminUserOrReadOnly
 from cars.serializer import CarSerializer
+from cars.services import CarFilter
 
 
 class CarView(
@@ -21,6 +22,8 @@ class CarView(
 ):
     queryset = Car.objects.filter(is_active=True)
     serializer_class = CarSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = CarFilter
 
     # permission_classes = [IsAdminUserOrReadOnly]
 

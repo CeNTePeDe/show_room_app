@@ -21,7 +21,7 @@ class CarFactory(factory.django.DjangoModelFactory):
     name = fake.vehicle_make()
     model_car = fake.vehicle_model()
     image = ""
-    year = int(fake.vehicle_year())
+    year = factory.Faker('year')
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
     body_type = fuzzy.FuzzyChoice(BodyType)
     color = fuzzy.FuzzyChoice(Color)

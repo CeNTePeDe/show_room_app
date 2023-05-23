@@ -20,7 +20,7 @@ def test_create_provider(api_client, build_provider):
     user = UserFactory.build(username="mytestuser", is_provider=True)
     payload = {
         "name": provider.name,
-        "year": provider.year,
+        "year": int(provider.year),
         "country": provider.country.code,
         "characteristic": provider.characteristic,
         "user": {
@@ -33,7 +33,6 @@ def test_create_provider(api_client, build_provider):
         ENDPOINT,
         data=json.dumps(payload),
         content_type="application/json",
-        charset="UTF-8",
     )
 
     assert response.status_code == 201
@@ -46,7 +45,7 @@ def test_retrieve_provider(api_client, create_provider):
     url = f"{ENDPOINT}{provider.user.id}/"
     payload = {
         "name": provider.name,
-        "year": provider.year,
+        "year": int(provider.year),
         "country": provider.country,
         "characteristic": provider.characteristic,
         "user": {
@@ -74,7 +73,7 @@ def test_update_provider(api_client, build_provider, create_provider):
     provider = create_provider(user=user)
     payload = {
         "name": build_provider.name,
-        "year": build_provider.year,
+        "year": int(build_provider.year),
         "country": build_provider.country.code,
         "characteristic": build_provider.characteristic,
         "is_active": build_provider.is_active,

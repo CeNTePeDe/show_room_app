@@ -2,7 +2,6 @@ import pytest
 import json
 
 from discount.models import SeasonDiscount
-from discount.serializer import SeasonDiscountSerializer
 
 
 ENDPOINT = "/api/v1_discount/season_discount/"

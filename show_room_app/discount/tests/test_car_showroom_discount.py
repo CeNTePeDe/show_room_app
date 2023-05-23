@@ -1,7 +1,6 @@
 import pytest
 import json
 from discount.models import CarShowRoomDiscount
-from discount.serializer import CarShowRoomDiscountSerializer
 
 ENDPOINT = "/api/v1_discount/car_showroom_discount/"
 

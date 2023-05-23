@@ -16,9 +16,7 @@ def test_car_provider_get_endpoint(client):
 
 @pytest.mark.django_db
 def test_create_car_provider(client, build_car_provider):
-    car = CarFactory()
-    provider = ProviderFactory()
-    car_provider = build_car_provider(car=car, provider=provider)
+    car_provider = build_car_provider()
     payload = {
         "car": car_provider.car.id,
         "provider": car_provider.provider.user.id,
@@ -52,11 +50,9 @@ def test_retrieve_car_provider(client, create_car_provider):
 
 
 @pytest.mark.django_db
-def test_update_car_provider(client):
-    provider = ProviderFactory()
-    car = CarFactory()
-    old_car_provider = CarProviderFactory.create(car=car, provider=provider)
-    new_car_provider = CarProviderFactory.build(car=car, provider=provider)
+def test_update_car_provider(client, create_car_provider, build_car_provider):
+    old_car_provider = create_car_provider()
+    new_car_provider = build_car_provider()
     url = f"{ENDPOINT}{old_car_provider.id}/"
     payload = {
         "car": new_car_provider.car.id,

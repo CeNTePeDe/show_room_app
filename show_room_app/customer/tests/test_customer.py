@@ -16,7 +16,7 @@ def test_customer_get_endpoint(api_client):
 @pytest.mark.django_db
 def test_create_customer(api_client, build_customer):
     user = UserFactory.build(username="test", is_customer=True)
-    customer = build_customer(user=user)
+    customer = build_customer()
     payload = {
         "username": customer.username,
         "balance": str(customer.balance.amount),
@@ -79,8 +79,8 @@ def test_update_customer(api_client, create_customer, build_customer):
     )
 
     data = response.data
-    assert response.status_code == 200
 
+    assert response.status_code == 200
     assert payload["username"] == data["username"]
     assert payload["balance"] == data["balance"]
     assert payload["max_price"] == data["max_price"]
@@ -92,5 +92,6 @@ def test_delete_customer(api_client, create_customer):
     user = UserFactory(username="test_customer", is_customer=True)
     customer = create_customer(user=user)
     url = f"{ENDPOINT}{customer.user.id}/"
-    respose = api_client.delete(url)
-    assert respose.status_code == 405
+    response = api_client.delete(url)
+
+    assert response.status_code == 405

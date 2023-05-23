@@ -1,19 +1,18 @@
 import pytest
 
 from car_showroom.tests.factories import CarShowRoomFactory
+from cars.tests.factories import CarFactory
 from customer.tests.factories import TransactionFactory, CustomerFactory
 from discount.tests.factories import CarShowRoomDiscountFactory, SeasonDiscountFactory
+from user.tests.factories import UserFactory
 
 
 @pytest.fixture
 def build_transaction(create_user_car_showroom, create_user_customer):
     def transaction(**kwargs):
-        user_car_showroom = create_user_car_showroom()
-        user_customer = create_user_customer()
-
         return TransactionFactory.build(
-            customer=CustomerFactory(user=user_customer),
-            car_showroom=CarShowRoomFactory(user=user_car_showroom),
+            car=CarFactory(),
+            car_showroom=CarShowRoomFactory(user=UserFactory(is_car_showroom=True)),
             discount=CarShowRoomDiscountFactory(),
             season_discount=SeasonDiscountFactory(),
             **kwargs
@@ -25,10 +24,9 @@ def build_transaction(create_user_car_showroom, create_user_customer):
 @pytest.fixture
 def create_transaction(create_user_car_showroom, create_user_customer):
     def transaction(**kwargs):
-        user_car_showroom = create_user_car_showroom()
-        car_showroom = CarShowRoomFactory(user=user_car_showroom)
         return TransactionFactory(
-            car_showroom=car_showroom,
+            car=CarFactory(),
+            car_showroom=CarShowRoomFactory(user=create_user_car_showroom()),
             discount=CarShowRoomDiscountFactory(),
             season_discount=SeasonDiscountFactory(),
             **kwargs

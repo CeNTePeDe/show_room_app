@@ -5,8 +5,6 @@ import factory
 from factory import fuzzy
 
 from car_showroom.models import CarShowRoom, SellModel
-from faker import Faker
-
 from cars.choice import Color, EnginType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
 from core.tests.factories import JSONFactory
@@ -14,15 +12,13 @@ from discount.tests.factories import ProviderDiscountFactory, SeasonDiscountFact
 from provider.tests.factories import ProviderFactory
 from user.tests.factories import UserFactory
 
-faker = Faker()
-
 
 class CarShowRoomFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CarShowRoom
 
-    name = faker.name()
-    year = int(faker.year())
+    name = factory.Faker('name')
+    year = factory.Faker('year')
     balance = Decimal("23.99")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
     characteristic = factory.Dict(

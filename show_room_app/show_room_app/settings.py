@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "djmoney",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "django_filters",
     "debug_toolbar",
     "cars.apps.CarsConfig",
     "customer.apps.CustomerConfig",
@@ -137,6 +138,9 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 5,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
     ],
 }
 

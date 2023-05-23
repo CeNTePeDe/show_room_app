@@ -9,6 +9,7 @@ class CustomerAdmin(admin.ModelAdmin):
         "username",
         "balance",
         "max_price",
+        "transaction",
         "is_active",
         "user",
     )
@@ -19,11 +20,11 @@ class CustomerAdmin(admin.ModelAdmin):
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
     list_display = (
+        "car",
         "car_showroom",
-        "price",
-        "customer",
         "discount",
         "season_discount",
+        "price",
         "date",
     )
     list_filter = ("date",)

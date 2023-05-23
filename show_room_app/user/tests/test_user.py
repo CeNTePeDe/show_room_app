@@ -1,8 +1,10 @@
+import json
+
 import pytest
 from django.urls import reverse
 
 
-ENDPOINT = "/api/v1_user/create/"
+ENDPOINT = "/api/v1_user/register/"
 
 
 @pytest.mark.django_db
@@ -25,7 +27,9 @@ def test_create_user_customer(client, build_user_customer):
         "is_provider": user.is_provider,
         "is_car_showroom": user.is_car_showroom,
     }
-    response = client.post(ENDPOINT, data=payload)
+    response = client.post(
+        ENDPOINT, data=json.dumps(payload), content_type="application/json"
+    )
     data = response.data
 
     assert response.status_code == 201
@@ -48,7 +52,9 @@ def test_create_user_car_showroom(client, build_user_car_showroom):
         "is_provider": user.is_provider,
         "is_car_showroom": user.is_car_showroom,
     }
-    response = client.post(ENDPOINT, data=payload)
+    response = client.post(
+        ENDPOINT, data=json.dumps(payload), content_type="application/json"
+    )
     data = response.data
 
     assert response.status_code == 201
@@ -71,7 +77,9 @@ def test_create_user_provider(client, build_user_provider):
         "is_provider": user.is_provider,
         "is_car_showroom": user.is_car_showroom,
     }
-    response = client.post(ENDPOINT, data=payload)
+    response = client.post(
+        ENDPOINT, data=json.dumps(payload), content_type="application/json"
+    )
     data = response.data
 
     assert response.status_code == 201

@@ -20,7 +20,7 @@ def test_create_car(api_client, build_car):
     payload = {
         "name": car.name,
         "model_car": car.model_car,
-        "year": car.year,
+        "year": int(car.year),
         "country": car.country,
         "body_type": car.body_type,
         "color": car.color,
@@ -52,7 +52,7 @@ def test_retrieve_car(api_client, create_car):
     payload = {
         "name": car.name,
         "model_car": car.model_car,
-        "year": car.year,
+        "year": int(car.year),
         "country": car.country,
         "body_type": car.body_type,
         "color": car.color,
@@ -86,7 +86,7 @@ def test_update_car(api_client, create_car, build_car):
     payload = {
         "name": build_car.name,
         "model_car": build_car.model_car,
-        "year": build_car.year,
+        "year": int(build_car.year),
         "country": build_car.country.code,
         "body_type": build_car.body_type,
         "color": build_car.color,

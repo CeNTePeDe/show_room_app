@@ -8,8 +8,13 @@ class Customer(models.Model):
     """
 
     username = models.CharField(max_length=40)
-    balance = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
+    balance = MoneyField(
+        max_digits=14, decimal_places=2, default_currency="USD", null=True
+    )
     max_price = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
+    transaction = models.ForeignKey(
+        "Transaction", on_delete=models.CASCADE, blank=True, null=True
+    )
     is_active = models.BooleanField(default=True)
     user = models.OneToOneField(
         "user.User", on_delete=models.CASCADE, primary_key=True, related_name="customer"
@@ -23,10 +28,14 @@ class Customer(models.Model):
 
 
 class Transaction(models.Model):
-    car_showroom = models.ForeignKey(
-        "car_showroom.CarShowRoom", on_delete=models.CASCADE
+    car = models.ForeignKey(
+        "cars.Car", on_delete=models.CASCADE, limit_choices_to={"is_active": True}
     )
-    customer = models.ForeignKey("customer.Customer", on_delete=models.CASCADE)
+    car_showroom = models.ForeignKey(
+        "car_showroom.CarShowRoom",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
     price = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     date = models.DateField(auto_now_add=True)
     discount = models.ForeignKey(
