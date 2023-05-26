@@ -10,6 +10,6 @@ class CarFilter(django_filters.FilterSet):
         fields = {
             "name": ["istartswith"],
             "model_car": ["istartswith"],
-            'price': ["lt", "gt"],
-            "body_type": ["exact"]
+            "price": ["lt", "gt"],
+            "body_type": ["exact"],
         }

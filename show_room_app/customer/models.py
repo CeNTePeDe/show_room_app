@@ -1,5 +1,12 @@
+from decimal import Decimal
+
 from django.db import models
 from djmoney.models.fields import MoneyField
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from django.db.models import JSONField
+
+from core.constants import jsonfield_customer
 
 
 class Customer(models.Model):
@@ -11,10 +18,10 @@ class Customer(models.Model):
     balance = MoneyField(
         max_digits=14, decimal_places=2, default_currency="USD", null=True
     )
-    max_price = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     transaction = models.ForeignKey(
         "Transaction", on_delete=models.CASCADE, blank=True, null=True
     )
+    characteristic_car = JSONField(default=jsonfield_customer, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     user = models.OneToOneField(
         "user.User", on_delete=models.CASCADE, primary_key=True, related_name="customer"
@@ -22,6 +29,10 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.username
+
+    def clean(self):
+        if Decimal(self.characteristic_car["price"]) >= self.balance.amount:
+            raise ValidationError(_("Max price cannot be greater than balance."))
 
     class Meta:
         verbose_name = "Customer"
@@ -38,12 +49,6 @@ class Transaction(models.Model):
     )
     price = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     date = models.DateField(auto_now_add=True)
-    discount = models.ForeignKey(
-        "discount.CarShowRoomDiscount", on_delete=models.CASCADE
-    )
-    season_discount = models.ForeignKey(
-        "discount.SeasonDiscount", on_delete=models.CASCADE
-    )
 
     def __str__(self):
         return self.car_showroom.name

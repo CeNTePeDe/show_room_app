@@ -17,7 +17,6 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "name",
             "year",
             "country",
-            "characteristic",
             "cars",
             "user",
             "is_active",
@@ -25,10 +24,8 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        user = UserSerializer.create(UserSerializer(), validated_data=user_data)
-        user.save()
+        user = User.objects.create(**user_data)
         provider = Provider.objects.create(user=user, **validated_data)
-        provider.save()
         return provider
 
 

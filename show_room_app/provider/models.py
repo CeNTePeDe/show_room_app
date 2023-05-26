@@ -4,7 +4,10 @@ from core.abstract_models import BaseRole, BaseSellModel
 
 
 class Provider(BaseRole):
-    cars = models.ManyToManyField("cars.Car", through="CarProvider")
+    cars = models.ManyToManyField(
+        "cars.Car",
+        through="CarProvider",
+    )
     user = models.OneToOneField(
         "user.User", on_delete=models.CASCADE, primary_key=True, related_name="provider"
     )
@@ -22,8 +25,25 @@ class CarProvider(BaseSellModel):
     and add number of car with margin(rate).
     """
 
-    car = models.ForeignKey("cars.Car", on_delete=models.CASCADE)
-    provider = models.ForeignKey("provider.Provider", on_delete=models.CASCADE)
+    car = models.ForeignKey(
+        "cars.Car",
+        related_name="car",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
+    provider = models.ForeignKey(
+        "provider.Provider",
+        related_name="provider",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
+    discount_provider = models.ForeignKey(
+        "discount.ProviderDiscount", on_delete=models.CASCADE
+    )
 
-    def __str__(self):
-        return f"{self.car} "
+    @property
+    def provider_price(self):
+        margin_amount = self.car.price * (self.margin / 100)
+        price = self.car.price + margin_amount
+        discount_amount = price * (self.discount / 100)
+        return price + discount_amount

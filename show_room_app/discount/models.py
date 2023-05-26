@@ -22,10 +22,7 @@ class CarShowRoomDiscount(BaseDiscount):
     )
 
 
-class SeasonDiscount(models.Model):
-    discount_name = models.CharField(
-        max_length=50,
-    )
+class SeasonDiscount(BaseDiscount):
     date_start = models.DateField(
         blank=False,
         null=False,

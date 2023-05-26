@@ -1,9 +1,10 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 if not load_dotenv():
@@ -31,6 +32,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "django_filters",
     "debug_toolbar",
+    "django_celery_beat",
+    "celery",
     "cars.apps.CarsConfig",
     "customer.apps.CustomerConfig",
     "discount.apps.DiscountConfig",
@@ -70,8 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "show_room_app.wsgi.application"
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     "default": {
@@ -86,6 +87,18 @@ DATABASES = {
         },
     },
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'show_room_app',
+#         'USER': 'postgres',
+#         'PASSWORD': '****',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -139,9 +152,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 INTERNAL_IPS = [
@@ -185,3 +196,30 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
+
+
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+import zoneinfo
+
+zoneinfo.available_timezones()
+
+# CELERY_BEAT_SCHEDULE = {
+#     'add_cars_to_sell_model': {
+#         'task': 'show_room_app.tasks.buy_car_from_provider',
+#         'schedule': 900,  # 15 minutes in seconds
+#         # 'args': (user_id,),
+#     },
+# }
+
+# CELERY_TIMEZONE = "UTC"
+# CELERY_BEAT_SCHEDULE = {
+#     "sample_task": {
+#         "task": "show_room_app.tasks.sample_task",
+#         "schedule": crontab(minute="*/1"),
+#     },
+# }

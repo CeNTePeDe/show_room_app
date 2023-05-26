@@ -14,7 +14,7 @@ class BodyType(models.TextChoices):
     _ = "Out of classification"
 
 
-class EnginType(models.TextChoices):
+class EngineType(models.TextChoices):
     Petrol = "Petrol"
     Diesel = "Diesel"
     Electric = "Electric"

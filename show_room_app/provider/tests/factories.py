@@ -3,7 +3,7 @@ import random
 import factory
 from factory import fuzzy
 
-from cars.choice import Color, EnginType, NumberOfDoor, BodyType
+from cars.choice import Color, EngineType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
 from provider.models import Provider, CarProvider
 
@@ -21,7 +21,7 @@ class ProviderFactory(factory.django.DjangoModelFactory):
     characteristic = factory.Dict(
         {
             "color": fuzzy.FuzzyChoice(Color),
-            "engine_type": fuzzy.FuzzyChoice(EnginType),
+            "engine_type": fuzzy.FuzzyChoice(EngineType),
             "number_of_doors": fuzzy.FuzzyChoice(NumberOfDoor),
             "body_type": fuzzy.FuzzyChoice(BodyType),
         }
@@ -38,5 +38,3 @@ class CarProviderFactory(factory.django.DjangoModelFactory):
     provider = factory.SubFactory(ProviderFactory)
     margin = random.randint(0, 100)
     number_of_cars = random.randint(0, 100)
-
-

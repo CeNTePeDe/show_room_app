@@ -25,7 +25,9 @@ def build_provider():
 def create_car_provider(create_provider):
     def car_provider(**kwargs):
         return CarProviderFactory(
-            car=CarFactory(), provider=create_provider(user=UserFactory(is_provider=True)), **kwargs
+            car=CarFactory(),
+            provider=create_provider(user=UserFactory(is_provider=True)),
+            **kwargs
         )
 
     return car_provider
@@ -34,8 +36,10 @@ def create_car_provider(create_provider):
 @pytest.fixture()
 def build_car_provider():
     def car_provider(**kwargs):
-        return CarProviderFactory.build(car=CarFactory(),
-                                        provider=ProviderFactory(user=UserFactory(is_provider=True)),
-                                        **kwargs)
+        return CarProviderFactory.build(
+            car=CarFactory(),
+            provider=ProviderFactory(user=UserFactory(is_provider=True)),
+            **kwargs
+        )
 
     return car_provider

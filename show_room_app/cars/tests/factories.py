@@ -4,7 +4,7 @@ import random
 import factory
 from factory import fuzzy
 
-from cars.choice import BodyType, Color, EnginType, NumberOfDoor
+from cars.choice import BodyType, Color, EngineType, NumberOfDoor
 from cars.models import Car
 from faker import Faker
 from faker_vehicle import VehicleProvider
@@ -21,11 +21,11 @@ class CarFactory(factory.django.DjangoModelFactory):
     name = fake.vehicle_make()
     model_car = fake.vehicle_model()
     image = ""
-    year = factory.Faker('year')
+    year = factory.Faker("year")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
     body_type = fuzzy.FuzzyChoice(BodyType)
     color = fuzzy.FuzzyChoice(Color)
-    engine_type = fuzzy.FuzzyChoice(EnginType)
+    engine_type = fuzzy.FuzzyChoice(EngineType)
     number_of_doors = fuzzy.FuzzyChoice(NumberOfDoor)
     price = "23.99"
     is_active = True
