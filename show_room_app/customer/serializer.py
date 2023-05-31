@@ -3,7 +3,6 @@ from rest_framework import serializers
 from car_showroom.serializer import CarShowRoomSerializer
 from cars.serializer import CarSerializer
 from customer.models import Customer, Transaction
-from discount.serializer import CarShowRoomDiscountSerializer, SeasonDiscountSerializer
 from user.models import User
 from user.serializer import UserSerializer
 
@@ -27,7 +26,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     # car_showroom = CarShowRoomSerializer()
     # discount = CarShowRoomDiscountSerializer()
-    # season_discount = SeasonDiscountSerializer()
+
     # car = CarSerializer()
 
     class Meta:

@@ -1,12 +1,6 @@
 from rest_framework import serializers
 
-from discount.models import SeasonDiscount, ProviderDiscount, CarShowRoomDiscount
-
-
-class SeasonDiscountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SeasonDiscount
-        fields = "__all__"
+from discount.models import ProviderDiscount, CarShowRoomDiscount
 
 
 class ProviderDiscountSerializer(serializers.ModelSerializer):

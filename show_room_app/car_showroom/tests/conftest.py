@@ -1,7 +1,7 @@
 import pytest
 
 from cars.tests.factories import CarFactory
-from discount.tests.factories import ProviderDiscountFactory, SeasonDiscountFactory
+from discount.tests.factories import ProviderDiscountFactory
 from provider.tests.factories import ProviderFactory
 from .factories import CarShowRoomFactory, SellModelFactory
 
@@ -30,7 +30,6 @@ def create_sell_model(create_user_car_showroom, create_user_provider):
             car_showroom=CarShowRoomFactory(user=create_user_car_showroom()),
             provider=ProviderFactory(user=create_user_provider),
             discount=ProviderDiscountFactory(),
-            season_discount=SeasonDiscountFactory(),
             **kwargs
         )
 
@@ -45,7 +44,6 @@ def build_sell_model(create_user_car_showroom, create_user_provider):
             car_showroom=CarShowRoomFactory(user=create_user_car_showroom()),
             provider=ProviderFactory(user=create_user_provider()),
             discount=ProviderDiscountFactory(),
-            season_discount=SeasonDiscountFactory(),
             **kwargs
         )
 

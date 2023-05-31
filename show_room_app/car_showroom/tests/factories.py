@@ -8,7 +8,7 @@ from car_showroom.models import CarShowRoom, SellModel
 from cars.choice import Color, EngineType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
 from core.tests.factories import JSONFactory
-from discount.tests.factories import ProviderDiscountFactory, SeasonDiscountFactory
+from discount.tests.factories import ProviderDiscountFactory
 from provider.tests.factories import ProviderFactory
 from user.tests.factories import UserFactory
 
@@ -43,7 +43,6 @@ class SellModelFactory(factory.django.DjangoModelFactory):
     car_showroom = factory.SubFactory(CarShowRoomFactory)
     provider = factory.SubFactory(ProviderFactory)
     discount = factory.SubFactory(ProviderDiscountFactory)
-    season_discount = factory.SubFactory(SeasonDiscountFactory)
     margin = random.randint(0, 100)
     number_of_cars = random.randint(0, 100)
 

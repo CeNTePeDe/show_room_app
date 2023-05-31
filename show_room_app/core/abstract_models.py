@@ -14,6 +14,16 @@ class BaseDiscount(models.Model):
         default=0,
         help_text="in per cent",
     )
+    date_start = models.DateField(
+        blank=True,
+        null=True,
+    )
+    date_finish = models.DateField(
+        blank=True,
+        null=True,
+    )
+    special_client = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.discount_name
@@ -23,6 +33,8 @@ class BaseDiscount(models.Model):
 
 
 class BaseRole(models.Model):
+    """The models describe base role in app."""
+
     name = models.CharField(max_length=30)
     year = models.PositiveSmallIntegerField(
         null=True, blank=True, validators=[validate_year]
@@ -40,16 +52,6 @@ class BaseSellModel(models.Model):
     """The model describes intermediate models with ManyToMany relationship."""
 
     margin = models.PositiveIntegerField(
-        validators=[MaxValueValidator(100)],
-        default=0,
-        help_text="in per cent",
-    )
-
-    season_discount = models.ForeignKey(
-        "discount.SeasonDiscount", on_delete=models.CASCADE
-    )
-    discount = models.PositiveIntegerField(
-        verbose_name="Discount for particular model",
         validators=[MaxValueValidator(100)],
         default=0,
         help_text="in per cent",

@@ -4,8 +4,8 @@ from django_countries.serializers import CountryFieldMixin
 from car_showroom.models import CarShowRoom, SellModel
 from cars.models import Car
 from cars.serializer import CarSerializer
-from discount.models import CarShowRoomDiscount, SeasonDiscount, ProviderDiscount
-from discount.serializer import SeasonDiscountSerializer, CarShowRoomDiscountSerializer
+from discount.models import CarShowRoomDiscount, ProviderDiscount
+from discount.serializer import CarShowRoomDiscountSerializer
 from provider.models import Provider
 from provider.serializer import ProviderSerializer
 from user.models import User
@@ -39,11 +39,10 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class SellModelSerializer(serializers.ModelSerializer):
-    # many=True, выпадает ошибка, что объект не является итерируемым
     car_showroom = CarShowRoomSerializer(required=False, read_only=True)
     provider = ProviderSerializer(required=False, read_only=True)
     discount = CarShowRoomDiscountSerializer(required=False, read_only=True)
-    season_discount = SeasonDiscountSerializer(required=False, read_only=True)
+
     car = CarSerializer(required=False, read_only=True)
 
     class Meta:
@@ -57,32 +56,3 @@ class SellModelSerializer(serializers.ModelSerializer):
             "margin",
             "number_of_cars",
         )
-
-    # def create(self, validated_data):
-    #     car_data = validated_data.pop("car")
-    #     car = Car.objects.create(**car_data)
-    #
-    #     discount_data = validated_data.pop("discount")
-    #     discount = ProviderDiscount.objects.create(**discount_data)
-    #
-    #     season_discount_data = validated_data.pop("season_discount")
-    #     season_discount = SeasonDiscount.objects.create(**season_discount_data)
-    #
-    #     car_showroom_data = validated_data.pop("car_showroom")
-    #     car_showroom_user_data = car_showroom_data.pop("user")
-    #     user_car_showroom = User.objects.create(**car_showroom_user_data)
-    #     car_showroom = CarShowRoom.objects.create(user=user_car_showroom, **car_showroom_data)
-    #
-    #     provider_data = validated_data.pop("provider")
-    #     provider_user_data = provider_data.pop("user")
-    #     user_provider = User.objects.create(**provider_user_data)
-    #     provider = Provider.objects.create(user=user_provider, **provider_data)
-    #
-    #     sell_model = SellModel.objects.create(car_showroom=car_showroom,
-    #                                           car=car,
-    #                                           provider=provider,
-    #                                           discount=discount,
-    #                                           season_discount=season_discount,
-    #                                           **validated_data)
-    #     return sell_model
-    #

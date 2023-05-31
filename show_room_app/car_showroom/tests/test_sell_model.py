@@ -3,7 +3,7 @@ import json
 
 from car_showroom.tests.factories import CarShowRoomFactory, SellModelFactory
 from cars.tests.factories import CarFactory
-from discount.tests.factories import ProviderDiscountFactory, SeasonDiscountFactory
+from discount.tests.factories import ProviderDiscountFactory
 from provider.tests.factories import ProviderFactory
 from user.tests.factories import UserFactory
 
@@ -75,8 +75,7 @@ def test_create_sell_model(api_client, build_sell_model):
 #             car_showroom=CarShowRoomFactory(user=UserFactory(is_car_showroom=True)),
 #             provider=ProviderFactory(user=UserFactory(is_provider=True)),
 #             discount=ProviderDiscountFactory(),
-#             season_discount=SeasonDiscountFactory())
-#     url = f"{ENDPOINT}{sell_model.id}/"
+#             url = f"{ENDPOINT}{sell_model.id}/"
 #     payload = {
 #
 #         "car_showroom": {

@@ -40,9 +40,6 @@ class SellModel(BaseSellModel):
     final_price = MoneyField(
         max_digits=14, decimal_places=2, default_currency="USD", default=0.0
     )
-    discount_car_showroom = models.ForeignKey(
-        "discount.CarShowRoomDiscount", on_delete=models.CASCADE
-    )
 
     @property
     def show_room_price(self):

@@ -1,12 +1,16 @@
 def jsonfield_car_showroom():
     return {
-        "name": "",
-        "model_car": "",
-        "color": "",
-        "engine_type": "",
-        "number_of_doors": "",
-        "body_type": "",
-        "count": 1,
+        "cars": [
+            {
+                "name": "",
+                "model_car": "",
+                "color": "",
+                "engine_type": "",
+                "number_of_doors": "",
+                "body_type": "",
+                "count": 1,
+            },
+        ]
     }
 
 

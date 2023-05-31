@@ -37,13 +37,8 @@ class CarProvider(BaseSellModel):
         on_delete=models.CASCADE,
         limit_choices_to={"is_active": True},
     )
-    discount_provider = models.ForeignKey(
-        "discount.ProviderDiscount", on_delete=models.CASCADE
-    )
 
     @property
     def provider_price(self):
         margin_amount = self.car.price * (self.margin / 100)
-        price = self.car.price + margin_amount
-        discount_amount = price * (self.discount / 100)
-        return price + discount_amount
+        return self.car.price + margin_amount

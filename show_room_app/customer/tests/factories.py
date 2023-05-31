@@ -7,7 +7,7 @@ from cars.tests.factories import CarFactory
 from customer.models import Customer, Transaction
 
 
-from discount.tests.factories import CarShowRoomDiscountFactory, SeasonDiscountFactory
+from discount.tests.factories import CarShowRoomDiscountFactory
 from user.tests.factories import UserFactory
 
 
@@ -19,7 +19,6 @@ class TransactionFactory(factory.django.DjangoModelFactory):
     car = factory.SubFactory(CarFactory)
     price = Decimal("23.99")
     discount = factory.SubFactory(CarShowRoomDiscountFactory)
-    season_discount = factory.SubFactory(SeasonDiscountFactory)
 
 
 class CustomerFactory(factory.django.DjangoModelFactory):
