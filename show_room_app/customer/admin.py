@@ -9,7 +9,6 @@ class CustomerAdmin(admin.ModelAdmin):
         "username",
         "balance",
         "characteristic_car",
-        "transaction",
         "is_active",
         "user",
     )
@@ -21,6 +20,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = (
         "car",
         "car_showroom",
+        "customer",
         "price",
         "date",
     )

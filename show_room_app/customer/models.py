@@ -11,15 +11,12 @@ from core.constants import jsonfield_customer
 
 class Customer(models.Model):
     """
-    This model describes Customer and connections with model CarShowRoom.
+    The model describes Customer and connections with model CarShowRoom.
     """
 
     username = models.CharField(max_length=40)
     balance = MoneyField(
         max_digits=14, decimal_places=2, default_currency="USD", null=True
-    )
-    transaction = models.ForeignKey(
-        "Transaction", on_delete=models.CASCADE, blank=True, null=True
     )
     characteristic_car = JSONField(default=jsonfield_customer, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -39,9 +36,14 @@ class Customer(models.Model):
 
 
 class Transaction(models.Model):
+    """
+    The model describes which cars were bought.
+    """
+
     car = models.ForeignKey(
         "cars.Car", on_delete=models.CASCADE, limit_choices_to={"is_active": True}
     )
+    customer = models.ForeignKey("customer.Customer", on_delete=models.CASCADE)
     car_showroom = models.ForeignKey(
         "car_showroom.CarShowRoom",
         on_delete=models.CASCADE,

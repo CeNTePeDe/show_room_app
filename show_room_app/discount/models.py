@@ -4,8 +4,8 @@ from core.abstract_models import BaseDiscount
 
 
 class ProviderDiscount(BaseDiscount):
-    provider = models.ForeignKey(
-        "provider.CarProvider",
+    provider_discount = models.ForeignKey(
+        "provider.Provider",
         related_name="discounts",
         blank=True,
         null=True,
@@ -14,8 +14,8 @@ class ProviderDiscount(BaseDiscount):
 
 
 class CarShowRoomDiscount(BaseDiscount):
-    car_showroom = models.ForeignKey(
-        "car_showroom.SellModel",
+    car_showroom_discount = models.ForeignKey(
+        "car_showroom.CarShowRoom",
         related_name="discounts",
         blank=True,
         null=True,

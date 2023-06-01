@@ -7,8 +7,7 @@ from discount.models import ProviderDiscount, CarShowRoomDiscount
 class ProviderAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(CarShowRoomDiscount)
 class CarShowRoomAdmin(admin.ModelAdmin):
     pass
-
-

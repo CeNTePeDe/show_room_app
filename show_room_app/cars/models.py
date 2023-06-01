@@ -7,7 +7,7 @@ from core.validators import validate_year
 
 
 class Car(models.Model):
-    """This model describe Car."""
+    """The model describe Car."""
 
     name = models.CharField(max_length=40)
     model_car = models.CharField(max_length=40)

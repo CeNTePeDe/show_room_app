@@ -22,7 +22,7 @@ class BaseDiscount(models.Model):
         blank=True,
         null=True,
     )
-    special_client = models.BooleanField(default=False)
+    special_discount = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -33,7 +33,7 @@ class BaseDiscount(models.Model):
 
 
 class BaseRole(models.Model):
-    """The models describe base role in app."""
+    """Absctarct model describes base role in app."""
 
     name = models.CharField(max_length=30)
     year = models.PositiveSmallIntegerField(
@@ -49,11 +49,13 @@ class BaseRole(models.Model):
 
 
 class BaseSellModel(models.Model):
-    """The model describes intermediate models with ManyToMany relationship."""
+    """
+    The model describes intermediate models with ManyToMany relationship.
+    """
 
     margin = models.PositiveIntegerField(
         validators=[MaxValueValidator(100)],
-        default=0,
+        default=10,
         help_text="in per cent",
     )
 

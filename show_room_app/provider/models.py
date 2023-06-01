@@ -4,6 +4,10 @@ from core.abstract_models import BaseRole, BaseSellModel
 
 
 class Provider(BaseRole):
+    """
+    The model describes provider characteristic.
+    """
+
     cars = models.ManyToManyField(
         "cars.Car",
         through="CarProvider",
@@ -21,8 +25,7 @@ class Provider(BaseRole):
 
 class CarProvider(BaseSellModel):
     """
-    This model is describing relationship Car-Provider,
-    and add number of car with margin(rate).
+    The model describes which cars the provider sells.
     """
 
     car = models.ForeignKey(
@@ -42,3 +45,6 @@ class CarProvider(BaseSellModel):
     def provider_price(self):
         margin_amount = self.car.price * (self.margin / 100)
         return self.car.price + margin_amount
+
+    def __str__(self):
+        return self.provider.name

@@ -6,6 +6,10 @@ from core.constants import jsonfield_car_showroom
 
 
 class CarShowRoom(BaseRole):
+    """
+    Model describes CarShowRoom with characteristic for car.
+    """
+
     cars = models.ManyToManyField("cars.Car", through="SellModel")
     characteristic = models.JSONField(default=jsonfield_car_showroom)
     balance = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
@@ -24,6 +28,10 @@ class CarShowRoom(BaseRole):
 
 
 class SellModel(BaseSellModel):
+    """
+    Model describes what cars showroom sells.
+    """
+
     car_showroom = models.ForeignKey(
         "car_showroom.CarShowRoom",
         on_delete=models.CASCADE,
@@ -37,11 +45,9 @@ class SellModel(BaseSellModel):
     )
     date = models.DateField(auto_now_add=True)
     count = models.PositiveIntegerField(default=1)
-    final_price = MoneyField(
-        max_digits=14, decimal_places=2, default_currency="USD", default=0.0
-    )
+    price_provider = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
 
     @property
-    def show_room_price(self):
-        margin_amount = self.final_price * (self.margin / 100)
-        return self.final_price + margin_amount
+    def price(self):
+        margin_amount = self.price_provider * (self.margin / 100)
+        return self.price_provider + margin_amount
