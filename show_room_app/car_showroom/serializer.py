@@ -2,11 +2,8 @@ from rest_framework import serializers
 from django_countries.serializers import CountryFieldMixin
 
 from car_showroom.models import CarShowRoom, SellModel
-from cars.models import Car
 from cars.serializer import CarSerializer
-from discount.models import CarShowRoomDiscount, ProviderDiscount
 from discount.serializer import CarShowRoomDiscountSerializer
-from provider.models import Provider
 from provider.serializer import ProviderSerializer
 from user.models import User
 from user.serializer import UserSerializer
@@ -22,11 +19,11 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "name",
             "year",
             "country",
-            "characteristic",
-            "data_add",
             "balance",
-            "user",
+            "list_of_car_model",
             "cars",
+            "data_add",
+            "user",
             "is_active",
         )
 
@@ -42,7 +39,6 @@ class SellModelSerializer(serializers.ModelSerializer):
     car_showroom = CarShowRoomSerializer(required=False, read_only=True)
     provider = ProviderSerializer(required=False, read_only=True)
     discount = CarShowRoomDiscountSerializer(required=False, read_only=True)
-
     car = CarSerializer(required=False, read_only=True)
 
     class Meta:
@@ -50,9 +46,7 @@ class SellModelSerializer(serializers.ModelSerializer):
         fields = (
             "car_showroom",
             "car",
-            "provider",
-            "discount",
-            "season_discount",
             "margin",
             "number_of_cars",
+            "provider",
         )

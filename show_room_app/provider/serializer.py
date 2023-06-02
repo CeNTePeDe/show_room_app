@@ -19,6 +19,7 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "country",
             "cars",
             "user",
+            "data_add",
             "is_active",
         )
 
@@ -30,11 +31,12 @@ class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
 
 class CarProviderSerializer(serializers.ModelSerializer):
+    car = CarSerializer()
+
     class Meta:
         model = CarProvider
         fields = (
             "provider",
             "car",
-            "number_of_cars",
             "margin",
         )

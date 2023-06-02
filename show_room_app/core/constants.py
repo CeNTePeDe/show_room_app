@@ -15,4 +15,4 @@ def jsonfield_car_showroom():
 
 
 def jsonfield_customer():
-    return {"name": "", "model": "", "price": "0.0"}
+    return {"name": "", "model": "", "price": 0.0}
