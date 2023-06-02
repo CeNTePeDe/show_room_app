@@ -11,6 +11,7 @@ class ProviderAdmin(admin.ModelAdmin):
         "date_start",
         "date_finish",
     )
+    list_filter = ("provider_discount",)
 
 
 @admin.register(CarShowRoomDiscount)
@@ -21,3 +22,5 @@ class CarShowRoomAdmin(admin.ModelAdmin):
         "date_start",
         "date_finish",
     )
+
+    list_filter = ("car_showroom_discount",)

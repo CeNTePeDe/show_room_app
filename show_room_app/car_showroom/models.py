@@ -11,7 +11,7 @@ class CarShowRoom(BaseRole):
     """
 
     cars = models.ManyToManyField("cars.Car", through="SellModel")
-    list_of_car_model = models.JSONField(default=jsonfield_car_showroom)
+    list_cars_to_buy = models.JSONField(default=jsonfield_car_showroom)
     balance = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
     user = models.OneToOneField(
         "user.User",

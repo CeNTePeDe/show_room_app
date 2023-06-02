@@ -13,7 +13,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ("user", "username", "balance", "characteristic_car", "is_active")
+        fields = ("user", "username", "balance", "model_car", "is_active")
         read_only_fields = ("balance",)
 
     def create(self, validated_data):

@@ -46,8 +46,7 @@ class TransactionView(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Transaction.objects.prefetch_related( "customer", "car_showroom",
-         "car")
+    queryset = Transaction.objects.prefetch_related("customer", "car_showroom", "car")
     serializer_class = TransactionSerializer
     # permission_classes = [IsCarShowroomOrReadOnly]
 

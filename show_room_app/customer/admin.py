@@ -8,7 +8,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = (
         "username",
         "balance",
-        "characteristic_car",
+        "model_car",
         "is_active",
         "user",
     )
