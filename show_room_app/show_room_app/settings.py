@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "discount.apps.DiscountConfig",
     "provider.apps.ProviderConfig",
     "user.apps.UserConfig",
-    "car_showroom.apps.CarShowroomConfig",
+    "car_showroom",
 ]
 
 MIDDLEWARE = [
@@ -208,18 +208,10 @@ import zoneinfo
 
 zoneinfo.available_timezones()
 
-# CELERY_BEAT_SCHEDULE = {
-#     'add_cars_to_sell_model': {
-#         'task': 'show_room_app.tasks.buy_car_from_provider',
-#         'schedule': 900,  # 15 minutes in seconds
-#         # 'args': (user_id,),
-#     },
-# }
-
-# CELERY_TIMEZONE = "UTC"
-# CELERY_BEAT_SCHEDULE = {
-#     "sample_task": {
-#         "task": "show_room_app.tasks.sample_task",
-#         "schedule": crontab(minute="*/1"),
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    "Buy car from provider": {
+        "task": "car_showroom.tasks.buy_car_from_provider",
+        "schedule": crontab(minute="*/15"),
+        "args": ("car_showroom.tasks.get_user_id_for_car_showroom()",),
+    },
+}

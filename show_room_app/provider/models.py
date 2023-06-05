@@ -13,7 +13,11 @@ class Provider(BaseRole):
         through="CarProvider",
     )
     user = models.OneToOneField(
-        "user.User", on_delete=models.CASCADE, primary_key=True, related_name="provider"
+        "user.User",
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="provider",
+        limit_choices_to={"is_provider": True},
     )
 
     def __str__(self):

@@ -9,19 +9,19 @@ from user.serializer import UserSerializer
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
+    # user = UserSerializer(required=False)
 
     class Meta:
         model = Customer
         fields = ("user", "username", "balance", "model_car", "is_active")
         read_only_fields = ("balance",)
 
-    def create(self, validated_data):
-        user_data = validated_data.pop("user")
-        user = User.objects.create(**user_data)
-        customer = Customer.objects.create(user=user, **validated_data)
-
-        return customer
+    # def create(self, validated_data):
+    #     user_data = validated_data.pop("user")
+    #     user = User.objects.create(**user_data)
+    #     customer = Customer.objects.create(user=user, **validated_data)
+    #
+    #     return customer
 
 
 class TransactionSerializer(serializers.ModelSerializer):

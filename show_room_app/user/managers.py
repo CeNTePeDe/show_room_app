@@ -15,9 +15,9 @@ class CustomUserManager(BaseUserManager):
         user = self.model(username=username, email=email, **extra_fields)
 
         if (
-            extra_fields.get("is_customer") is False
-            and extra_fields.get("is_car_showroom") is False
-            and extra_fields.get("is_provider") is False
+            extra_fields.get("is_customer") == False
+            and extra_fields.get("is_car_showroom") == False
+            and extra_fields.get("is_provider") == False
         ):
             raise ValueError("One of this fields must be chosen")
         user.set_password(password)

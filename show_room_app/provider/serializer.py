@@ -9,7 +9,7 @@ from user.serializer import UserSerializer
 
 class ProviderSerializer(CountryFieldMixin, serializers.ModelSerializer):
     cars = CarSerializer(many=True, read_only=True)
-    user = UserSerializer(required=False)
+    # user = UserSerializer(required=False)
 
     class Meta:
         model = Provider

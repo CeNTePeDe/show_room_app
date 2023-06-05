@@ -73,5 +73,19 @@ services:
     depends_on:
       - celery
 
+  celery-beat:
+    build:
+      context: .
+    command: celery -A show_room_app beat -l info
+    volumes:
+      - .:/usr/src/show_room_app
+    environment:
+      - DEBUG=${SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${ALLOWED_HOST}
+    depends_on:
+      - redis
+      - pq_db
+
 volumes:
   pg_project:

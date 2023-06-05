@@ -18,6 +18,7 @@ class CarShowRoom(BaseRole):
         on_delete=models.CASCADE,
         primary_key=True,
         related_name="car_showroom",
+        limit_choices_to={"is_car_showroom": True},
     )
 
     def __str__(self):

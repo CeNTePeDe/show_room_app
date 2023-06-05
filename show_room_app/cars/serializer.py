@@ -9,4 +9,4 @@ class CarSerializer(CountryFieldMixin, serializers.ModelSerializer):
 
     class Meta:
         model = Car
-        exclude = ("price",)
+        fields = '__all__'

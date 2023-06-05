@@ -12,6 +12,7 @@ from car_showroom.serializer import (
     CarShowRoomSerializer,
     SellModelSerializer,
 )
+from car_showroom.services import CarFromCarShowRoomFilter
 from user.permission import IsCarShowroomOrReadOnly
 
 
@@ -26,7 +27,8 @@ class CarShowRoomView(
     queryset = CarShowRoom.objects.filter(is_active=True).prefetch_related(
         "cars", "user"
     )
-    # permission_classes = [IsAuthenticatedOrReadOnly]
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -53,6 +55,5 @@ class CarShowRoomView(
 
 class SellModelView(viewsets.ModelViewSet):
     serializer_class = SellModelSerializer
-    queryset = SellModel.objects.prefetch_related(
-        "discount", "season_discount", "car_showroom", "provider", "car"
-    )
+    queryset = SellModel.objects.prefetch_related("car_showroom", "provider", "car")
+    filterset_class = CarFromCarShowRoomFilter

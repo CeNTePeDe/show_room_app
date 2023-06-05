@@ -16,7 +16,6 @@ def get_season_discount_from_car_showroom(sale_date: date, car_showroom_id: int)
         return 0
 
 
-
 def get_car_showroom_discount_for_special_client(
     car_showroom_id: int, customer_id: int
 ) -> int:

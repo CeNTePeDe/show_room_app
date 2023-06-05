@@ -38,7 +38,6 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
 class SellModelSerializer(serializers.ModelSerializer):
     car_showroom = CarShowRoomSerializer(required=False, read_only=True)
     provider = ProviderSerializer(required=False, read_only=True)
-    discount = CarShowRoomDiscountSerializer(required=False, read_only=True)
     car = CarSerializer(required=False, read_only=True)
 
     class Meta:
@@ -47,6 +46,6 @@ class SellModelSerializer(serializers.ModelSerializer):
             "car_showroom",
             "car",
             "margin",
-            "number_of_cars",
+            "count",
             "provider",
         )

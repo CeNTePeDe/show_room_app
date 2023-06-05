@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from car_showroom.models import SellModel
 from core.car_showroom_discount import get_full_discount
-from customer.models import Customer, Transaction
+from customer.models import Transaction, Customer
 
 
 @shared_task()

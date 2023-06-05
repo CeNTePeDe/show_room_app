@@ -8,14 +8,14 @@ ENDPOINT = "/api/v1_car/cars/"
 
 
 @pytest.mark.django_db
-def test_car_endpoint(api_client):
+def test_car_endpoint(simple_api_client):
     url = reverse("car-list")
-    response = api_client.get(url)
+    response = simple_api_client.get(url)
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_create_car(api_client, build_car):
+def test_create_car(admin_api_client, build_car):
     car = build_car()
     payload = {
         "name": car.name,
@@ -30,7 +30,7 @@ def test_create_car(api_client, build_car):
         "is_active": car.is_active,
     }
 
-    response = api_client.post(ENDPOINT, data=payload)
+    response = admin_api_client.post(ENDPOINT, data=payload)
     data = response.data
 
     assert response.status_code == 201
@@ -46,7 +46,7 @@ def test_create_car(api_client, build_car):
 
 
 @pytest.mark.django_db
-def test_retrieve_car(api_client, create_car):
+def test_retrieve_car(simple_api_client, create_car):
     car = create_car()
     url = f"{ENDPOINT}{car.id}/"
     payload = {
@@ -62,7 +62,7 @@ def test_retrieve_car(api_client, create_car):
         "is_active": car.is_active,
     }
 
-    response = api_client.get(url)
+    response = simple_api_client.get(url)
     data = response.data
 
     assert response.status_code == 200
@@ -78,7 +78,7 @@ def test_retrieve_car(api_client, create_car):
 
 
 @pytest.mark.django_db
-def test_update_car(api_client, create_car, build_car):
+def test_update_car(admin_api_client, create_car, build_car):
     create_car = create_car()
     build_car = build_car()
     url = f"{ENDPOINT}{create_car.id}/"
@@ -96,7 +96,7 @@ def test_update_car(api_client, create_car, build_car):
         "is_active": build_car.is_active,
     }
 
-    response = api_client.put(
+    response = admin_api_client.put(
         url, data=json.dumps(payload), content_type="application/json"
     )
     data = response.data
@@ -114,9 +114,9 @@ def test_update_car(api_client, create_car, build_car):
 
 
 @pytest.mark.django_db
-def test_delete_car(api_client, create_car):
+def test_delete_car(admin_api_client, create_car):
     car = create_car()
     url = f"{ENDPOINT}{car.id}/"
-    response = api_client.delete(url)
+    response = admin_api_client.delete(url)
 
     assert response.status_code == 405

@@ -18,10 +18,14 @@ class Customer(models.Model):
     balance = MoneyField(
         max_digits=14, decimal_places=2, default_currency="USD", null=True
     )
-    model_car = JSONField(default=jsonfield_customer, blank=True, null=True)
+    model_car = JSONField(default=jsonfield_customer(), blank=True, null=True)
     is_active = models.BooleanField(default=True)
     user = models.OneToOneField(
-        "user.User", on_delete=models.CASCADE, primary_key=True, related_name="customer"
+        "user.User",
+        on_delete=models.CASCADE,
+        primary_key=True,
+        related_name="customer",
+        limit_choices_to={"is_customer": True},
     )
 
     def __str__(self):
