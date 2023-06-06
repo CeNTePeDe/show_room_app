@@ -73,7 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "show_room_app.wsgi.application"
 
-
 DATABASES = {
     "default": {
         "ENGINE": os.environ.get("SQL_ENGINE"),
@@ -144,7 +143,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 REST_FRAMEWORK = {
     "USER_DETAILS_SERIALIZER": "user.serializer.UserDetailSerializer",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
@@ -167,7 +165,6 @@ if DEBUG:
         ALLOWED_HOSTS,
         "10.0.2.2",
     ]
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -197,7 +194,6 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
-
 CELERY_BROKER_URL = "redis://redis:6379/0"
 CELERY_RESULT_BACKEND = "redis://redis:6379/0"
 CELERY_ACCEPT_CONTENT = ["application/json"]
@@ -210,8 +206,16 @@ zoneinfo.available_timezones()
 
 CELERY_BEAT_SCHEDULE = {
     "Buy car from provider": {
-        "task": "car_showroom.tasks.buy_car_from_provider",
+        "task": "car_showroom.tasks.buy_car_from_provider_for_each_car_showroom",
         "schedule": crontab(minute="*/15"),
-        "args": ("car_showroom.tasks.get_user_id_for_car_showroom()",),
     },
 }
+
+
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+# EMAIL_HOST = os.environ.get("EMAIL_HOST")
+# EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+# EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+#

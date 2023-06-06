@@ -9,6 +9,7 @@ from customer.serializer import (
     TransactionSerializer,
 )
 from customer.models import Customer, Transaction
+from customer.services import TransactionFilter
 from user.permission import IsCustomerOrReadOnly, IsCarShowroomOrReadOnly
 
 
@@ -27,8 +28,8 @@ class CustomerView(
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
-        car_showroom = get_object_or_404(queryset, pk=pk)
-        serializer = self.serializer_class(car_showroom)
+        customer = get_object_or_404(queryset, pk=pk)
+        serializer = self.serializer_class(customer)
         return Response(serializer.data)
 
     @action(
@@ -48,7 +49,8 @@ class TransactionView(
 ):
     queryset = Transaction.objects.prefetch_related("customer", "car_showroom", "car")
     serializer_class = TransactionSerializer
-    # permission_classes = [IsCarShowroomOrReadOnly]
+    # permission_classes = [IsAdminUser]
+    filterset_class = TransactionFilter
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()

@@ -1,5 +1,3 @@
-from django.db.models import Prefetch
-
 from rest_framework import viewsets, status, mixins
 
 from rest_framework.decorators import action
@@ -27,7 +25,6 @@ class CarShowRoomView(
     queryset = CarShowRoom.objects.filter(is_active=True).prefetch_related(
         "cars", "user"
     )
-
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):

@@ -1,5 +1,5 @@
 import django_filters
-from .models import SellModel
+from car_showroom.models import SellModel
 
 
 class CarFromCarShowRoomFilter(django_filters.FilterSet):

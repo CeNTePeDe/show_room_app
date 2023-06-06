@@ -1,5 +1,5 @@
 import django_filters
-from .models import CarProvider
+from provider.models import CarProvider
 
 
 class CarProviderFilter(django_filters.FilterSet):

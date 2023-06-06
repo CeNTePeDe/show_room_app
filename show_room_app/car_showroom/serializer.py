@@ -3,7 +3,6 @@ from django_countries.serializers import CountryFieldMixin
 
 from car_showroom.models import CarShowRoom, SellModel
 from cars.serializer import CarSerializer
-from discount.serializer import CarShowRoomDiscountSerializer
 from provider.serializer import ProviderSerializer
 from user.models import User
 from user.serializer import UserSerializer
@@ -20,7 +19,7 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "year",
             "country",
             "balance",
-            "list_of_car_model",
+            "list_cars_to_buy",
             "cars",
             "data_add",
             "user",
