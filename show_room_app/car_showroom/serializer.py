@@ -2,16 +2,12 @@ from rest_framework import serializers
 from django_countries.serializers import CountryFieldMixin
 
 from car_showroom.models import CarShowRoom, SellModel
+from cars.models import Car
 from cars.serializer import CarSerializer
-from provider.serializer import ProviderSerializer
-from user.models import User
-from user.serializer import UserSerializer
+from provider.models import Provider
 
 
 class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
-    cars = CarSerializer(many=True, read_only=True)
-    user = UserSerializer(required=False)
-
     class Meta:
         model = CarShowRoom
         fields = (
@@ -20,24 +16,22 @@ class CarShowRoomSerializer(CountryFieldMixin, serializers.ModelSerializer):
             "country",
             "balance",
             "list_cars_to_buy",
-            "cars",
             "data_add",
             "user",
             "is_active",
         )
 
-    def create(self, validated_data):
-        user_data = validated_data.pop("user")
-        user = User.objects.create(**user_data)
-        car_showroom = CarShowRoom.objects.create(user=user, **validated_data)
-
-        return car_showroom
-
 
 class SellModelSerializer(serializers.ModelSerializer):
-    car_showroom = CarShowRoomSerializer(required=False, read_only=True)
-    provider = ProviderSerializer(required=False, read_only=True)
-    car = CarSerializer(required=False, read_only=True)
+    car_showroom = serializers.SlugRelatedField(
+        queryset=CarShowRoom.objects.all(), many=False, slug_field="name"
+    )
+    provider = serializers.SlugRelatedField(
+        queryset=Provider.objects.all(),
+        many=False,
+        slug_field="name",
+    )
+    car = CarSerializer()
 
     class Meta:
         model = SellModel
@@ -48,3 +42,22 @@ class SellModelSerializer(serializers.ModelSerializer):
             "count",
             "provider",
         )
+
+    def create(self, validated_data):
+        car_data = validated_data.pop("car")
+        car = Car.objects.create(**car_data)
+        sell_model = SellModel.objects.create(car=car, **validated_data)
+
+        return sell_model
+
+    def update(self, instance, validated_data):
+        car_data = validated_data.pop("car", None)
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        if car_data is not None:
+            car_instance = instance.car
+            for key, value in car_data.items():
+                setattr(car_instance, key, value)
+            car_instance.save()
+        instance.save()
+        return instance

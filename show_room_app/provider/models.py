@@ -15,7 +15,6 @@ class Provider(BaseRole):
     user = models.OneToOneField(
         "user.User",
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="provider",
         limit_choices_to={"is_provider": True},
     )

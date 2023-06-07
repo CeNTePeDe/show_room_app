@@ -1,34 +1,33 @@
 import pytest
 import json
 
-from user.tests.factories import UserFactory
+from rest_framework_simplejwt.tokens import AccessToken
 
 ENDPOINT = "/api/v1_customer/customer/"
 
 
 @pytest.mark.django_db
-def test_customer_get_endpoint(api_client):
-    response = api_client.get(ENDPOINT)
+def test_customer_get_endpoint(simple_api_client):
+    response = simple_api_client.get(ENDPOINT)
 
     assert response.status_code == 200
 
 
 @pytest.mark.django_db
-def test_create_customer(api_client, build_customer):
-    user = UserFactory.build(username="test", is_customer=True)
-    customer = build_customer()
+def test_create_customer(simple_api_client, build_customer, create_user_customer):
+    user = create_user_customer()
+    access_token = AccessToken.for_user(user)
+    simple_api_client.force_authenticate(user=user, token=str(access_token))
+    customer = build_customer(user=user)
     payload = {
         "username": customer.username,
         "balance": str(customer.balance.amount),
-        "max_price": str(customer.max_price.amount),
-        "user": {
-            "username": user.username,
-            "is_customer": user.is_customer,
-        },
+        "model_car": customer.model_car,
+        "user": customer.user.id,
         "is_active": True,
     }
 
-    response = api_client.post(
+    response = simple_api_client.post(
         ENDPOINT, data=json.dumps(payload), content_type="application/json"
     )
 
@@ -37,44 +36,46 @@ def test_create_customer(api_client, build_customer):
 
 #
 @pytest.mark.django_db
-def test_retrieve_customer(api_client, create_customer):
-    user = UserFactory.create(username="test_user", is_customer=True)
+def test_retrieve_customer(simple_api_client, create_customer, create_user_customer):
+    user = create_user_customer()
     customer = create_customer(user=user)
     url = f"{ENDPOINT}{customer.user.id}/"
     payload = {
         "username": customer.username,
         "balance": str(customer.balance.amount),
-        "max_price": str(customer.max_price.amount),
+        "model_car": customer.model_car,
         "is_active": customer.is_active,
-        "user": {
-            "username": user.username,
-            "is_customer": user.is_customer,
-        },
+        "user": customer.user.id,
     }
-    response = api_client.get(url)
+    response = simple_api_client.get(url)
     data = response.data
 
     assert response.status_code == 200
     assert payload["username"] == data["username"]
     assert payload["balance"] == data["balance"]
-    assert payload["max_price"] == data["max_price"]
+    assert payload["model_car"] == data["model_car"]
     assert payload["is_active"] == data["is_active"]
-    assert payload["user"]["username"] == data["user"]["username"]
+    assert payload["user"] == data["user"]
 
 
 @pytest.mark.django_db()
-def test_update_customer(api_client, create_customer, build_customer):
-    user = UserFactory(username="test_user", is_customer=True)
+def test_update_customer(
+    simple_api_client, create_customer, build_customer, create_user_customer
+):
+    user = create_user_customer()
+    access_token = AccessToken.for_user(user)
+    simple_api_client.force_authenticate(user=user, token=str(access_token))
     create_customer = create_customer(user=user)
-    build_customer = build_customer()
+    customer = build_customer()
     payload = {
-        "username": build_customer.username,
-        "balance": str(build_customer.balance.amount),
-        "max_price": str(build_customer.max_price.amount),
-        "is_active": build_customer.is_active,
+        "username": customer.username,
+        "balance": str(customer.balance.amount),
+        "model_car": customer.model_car,
+        "is_active": customer.is_active,
+        "user": user.id,
     }
     url = f"{ENDPOINT}{create_customer.user.id}/"
-    response = api_client.put(
+    response = simple_api_client.put(
         url, data=json.dumps(payload), content_type="application/json"
     )
 
@@ -83,15 +84,16 @@ def test_update_customer(api_client, create_customer, build_customer):
     assert response.status_code == 200
     assert payload["username"] == data["username"]
     assert payload["balance"] == data["balance"]
-    assert payload["max_price"] == data["max_price"]
     assert payload["is_active"] == data["is_active"]
 
 
 @pytest.mark.django_db
-def test_delete_customer(api_client, create_customer):
-    user = UserFactory(username="test_customer", is_customer=True)
+def test_delete_customer(simple_api_client, create_customer, create_user_customer):
+    user = create_user_customer()
+    access_token = AccessToken.for_user(user)
+    simple_api_client.force_authenticate(user=user, token=str(access_token))
     customer = create_customer(user=user)
     url = f"{ENDPOINT}{customer.user.id}/"
-    response = api_client.delete(url)
+    response = simple_api_client.delete(url)
 
     assert response.status_code == 405

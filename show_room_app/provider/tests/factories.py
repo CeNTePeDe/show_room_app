@@ -29,4 +29,3 @@ class CarProviderFactory(factory.django.DjangoModelFactory):
     car = factory.SubFactory(CarFactory)
     provider = factory.SubFactory(ProviderFactory)
     margin = random.randint(0, 100)
-    number_of_cars = random.randint(0, 100)

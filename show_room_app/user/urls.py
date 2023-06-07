@@ -17,7 +17,7 @@ router.register(r"user", UserView, basename="user")
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
     path("register/", RegistrationAPIView.as_view(), name="register"),
     path("activate/<str:uidb64>/<str:token>/", ActivateView.as_view(), name="activate"),
     path("forgot_password/", ForgotPasswordView.as_view(), name="forgot_password"),

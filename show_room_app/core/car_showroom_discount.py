@@ -11,9 +11,10 @@ def get_season_discount_from_car_showroom(sale_date: date, car_showroom_id: int)
         season_discount = car_showroom.discounts.get(
             date_start__lte=sale_date, date_finish__gte=sale_date, is_active=True
         ).discount_rate
-        return season_discount
+
     except CarShowRoomDiscount.DoesNotExist:
         return 0
+    return season_discount
 
 
 def get_car_showroom_discount_for_special_client(

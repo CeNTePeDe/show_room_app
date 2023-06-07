@@ -1,5 +1,6 @@
 import pytest
-from .factories import CarFactory
+
+from cars.tests.factories import CarFactory
 
 
 @pytest.fixture()

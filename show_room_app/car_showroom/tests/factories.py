@@ -21,7 +21,7 @@ class CarShowRoomFactory(factory.django.DjangoModelFactory):
     year = factory.Faker("year")
     balance = Decimal("23.99")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
-    characteristic = factory.Dict(
+    list_cars_to_buy = factory.Dict(
         {
             "color": fuzzy.FuzzyChoice(Color),
             "engine_type": fuzzy.FuzzyChoice(EngineType),
@@ -39,12 +39,12 @@ class SellModelFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = SellModel
 
-    car = factory.SubFactory(CarFactory)
     car_showroom = factory.SubFactory(CarShowRoomFactory)
-    provider = factory.SubFactory(ProviderFactory)
-    discount = factory.SubFactory(ProviderDiscountFactory)
+    car = factory.SubFactory(CarFactory)
     margin = random.randint(0, 100)
-    number_of_cars = random.randint(0, 100)
+    count = random.randint(0, 100)
+    provider = factory.SubFactory(ProviderFactory)
+    price_provider = Decimal("10.0")
 
 
 class CarShowRoomWithSellFactory(CarShowRoomFactory):

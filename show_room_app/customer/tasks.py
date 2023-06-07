@@ -10,6 +10,7 @@ from customer.models import Transaction, Customer
 
 @shared_task()
 def buy_car_from_car_showroom(user_id: int) -> None:
+    # retrieve object customer
     customer = Customer.objects.get(user_id=user_id)
     model_car = customer.model_car
 
@@ -20,7 +21,7 @@ def buy_car_from_car_showroom(user_id: int) -> None:
     car_with_price: dict = {}
     for car_item in sell_model:
         discount = get_full_discount(
-            car_showroom_id=car_item.car_showroom_id, customer_id=user_id
+            car_showroom_id=car_item.car_showroom.user.id, customer_id=user_id
         )
         price = car_item.price * discount + car_item.price
         car_with_price.update({car_item: price})

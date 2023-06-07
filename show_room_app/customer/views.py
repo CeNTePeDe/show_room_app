@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
+from cars.permission import IsAdminUserOrReadOnly
 from customer.serializer import (
     CustomerSerializer,
     TransactionSerializer,
@@ -24,7 +25,7 @@ class CustomerView(
 
     queryset = Customer.objects.filter(is_active=True).select_related("user")
     serializer_class = CustomerSerializer
-    # permission_classes = [IsCustomerOrReadOnly]
+    permission_classes = [IsCustomerOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -49,7 +50,7 @@ class TransactionView(
 ):
     queryset = Transaction.objects.prefetch_related("customer", "car_showroom", "car")
     serializer_class = TransactionSerializer
-    # permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUserOrReadOnly]
     filterset_class = TransactionFilter
 
     def retrieve(self, request, pk=id, *args, **kwargs):

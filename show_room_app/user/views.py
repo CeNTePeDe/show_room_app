@@ -54,7 +54,6 @@ class RegistrationAPIView(CreateAPIView):
     permission_classes = (AllowAny,)
 
     def create(self, request, *args, **kwargs):
-
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -72,6 +71,7 @@ class RegistrationAPIView(CreateAPIView):
         )
         send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class ActivateView(APIView):
     """
