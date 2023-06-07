@@ -53,10 +53,12 @@ class RegistrationAPIView(CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        user.is_active = False
-        user.save()
+
         current_site = get_current_site(self.request)
         subject = "Activate Your Account"
         message = render_to_string(
@@ -64,12 +66,12 @@ class RegistrationAPIView(CreateAPIView):
             {
                 "user": user,
                 "domain": current_site.domain,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "uid": urlsafe_base64_encode(force_bytes(user.id)),
                 "token": default_token_generator.make_token(user),
             },
         )
         send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
-
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ActivateView(APIView):
     """
@@ -86,10 +88,10 @@ class ActivateView(APIView):
         if user and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            return Response({"status": "activated"})
+            return Response({"message": "activated"}, status=status.HTTP_201_CREATED)
         else:
             return Response(
-                {"status": "invalid token"}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "invalid token"}, status=status.HTTP_400_BAD_REQUEST
             )
 
 
@@ -115,7 +117,7 @@ class ForgotPasswordView(GenericAPIView):
             },
         )
         send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email])
-        return Response({"status": "email sent"})
+        return Response({"message": "email sent"}, status=status.HTTP_200_OK)
 
 
 class ResetPasswordView(GenericAPIView):
@@ -132,10 +134,12 @@ class ResetPasswordView(GenericAPIView):
             password = request.data.get("password")
             user.set_password(password)
             user.save()
-            return Response({"status": "password reset"})
+            return Response(
+                {"message": "password reset"}, status=status.HTTP_201_CREATED
+            )
         else:
             return Response(
-                {"status": "invalid token"}, status=status.HTTP_400_BAD_REQUEST
+                {"message": "invalid token"}, status=status.HTTP_400_BAD_REQUEST
             )
 
 

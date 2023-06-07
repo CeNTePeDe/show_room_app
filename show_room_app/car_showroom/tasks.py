@@ -55,6 +55,6 @@ def buy_car_from_provider(user_id: int) -> None:
 
 @shared_task()
 def buy_car_from_provider_for_each_car_showroom() -> None:
-    user_ids = list(CarShowRoom.objects.values_list("user_id", flat=True))
+    user_ids = CarShowRoom.objects.values_list("user_id", flat=True)
     for user_id in user_ids:
         buy_car_from_provider.delay(user_id)

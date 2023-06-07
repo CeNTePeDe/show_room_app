@@ -28,7 +28,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    username = serializers.CharField(required=True)
+    username = serializers.CharField(
+        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     first_name = serializers.CharField(required=False, write_only=True)
     last_name = serializers.CharField(required=False, write_only=True)
 
@@ -58,14 +60,22 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"password": "Password fields didn't match."}
             )
+        if (
+                attrs["is_customer"] == False
+                and attrs["is_car_showroom"] == False
+                and attrs["is_provider"] == False
+        ):
+            raise serializers.ValidationError(
+                {
+                    "Message": "One of this fields(customer, car_showroom, provider) must be chosen."
+                }
+            )
         return attrs
-
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"],
-            password_confirm=validated_data["password_confirm"],
             is_customer=validated_data["is_customer"],
             is_provider=validated_data["is_provider"],
             is_car_showroom=validated_data["is_car_showroom"],
@@ -75,11 +85,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        for key, value in validated_data.items():
-            if key == "password":
-                instance.set_password(value)
-            else:
-                setattr(instance, key, value)
+        if validated_data.get("password"):
+            instance.set_password(validated_data.pop("password"))
+        super().update(instance, validated_data)
         instance.save()
         return instance
 
@@ -124,9 +132,7 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.set_password(validated_data["password"])
-        instance.set_password(validated_data["password_confirm"])
         instance.save()
-
         return instance
 
 
