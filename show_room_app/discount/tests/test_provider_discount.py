@@ -3,7 +3,7 @@ import json
 
 from discount.models import ProviderDiscount
 
-ENDPOINT = "/api/v1_discount/provider_discount/"
+ENDPOINT = "http://localhost:8000/api/v1_discount/provider_discount/"
 
 
 @pytest.mark.django_db
