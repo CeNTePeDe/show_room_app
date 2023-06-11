@@ -23,6 +23,7 @@ class Customer(models.Model):
         null=True,
     )
     model_car = JSONField(default=jsonfield_customer, blank=True, null=True)
+
     is_active = models.BooleanField(default=True)
     user = models.OneToOneField(
         "user.User",

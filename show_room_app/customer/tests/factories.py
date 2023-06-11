@@ -30,7 +30,7 @@ class CustomerFactory(factory.django.DjangoModelFactory):
     username = factory.Faker("name")
     balance = Decimal("23.99")
     model_car = factory.Dict(
-        {"name": fake.vehicle_make(), "model": fake.vehicle_model(), "price": 0.0}
+        {"name": fake.vehicle_make(), "model": fake.vehicle_model(), "price": 0.0, "count":1}
     )
     is_active = True
     user = factory.SubFactory(UserFactory)

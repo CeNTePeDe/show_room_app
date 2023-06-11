@@ -2,10 +2,8 @@ import random
 
 import pytest
 
-from cars.tests.factories import CarFactory
 from discount.tests.factories import ProviderDiscountFactory
-from user.tests.factories import UserFactory
-from .factories import ProviderFactory, CarProviderFactory
+from provider.tests.factories import ProviderFactory, CarProviderFactory
 
 
 @pytest.fixture()
@@ -50,3 +48,27 @@ def create_season_discount():
         )
 
     return season_discount
+
+
+@pytest.fixture()
+def create_first_purchase_discount():
+    def first_purchase_discount(**kwargs):
+        return ProviderDiscountFactory(
+            discount_name="first_purchase_discount",
+            discount_rate=random.randint(0, 100),
+            **kwargs
+        )
+
+    return first_purchase_discount
+
+
+@pytest.fixture()
+def create_regular_customer_discount():
+    def regular_customer(**kwargs):
+        return ProviderDiscountFactory(
+            discount_name="regular_customer",
+            discount_rate=random.randint(0, 100),
+            **kwargs
+        )
+
+    return regular_customer

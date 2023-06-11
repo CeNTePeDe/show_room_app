@@ -48,3 +48,27 @@ def create_season_discount():
         )
 
     return season_discount
+
+
+@pytest.fixture()
+def create_first_purchase_discount():
+    def first_purchase_discount(**kwargs):
+        return CarShowRoomDiscountFactory(
+            discount_name="first_purchase_discount",
+            discount_rate=random.randint(0, 100),
+            **kwargs
+        )
+
+    return first_purchase_discount
+
+
+@pytest.fixture()
+def create_regular_customer_discount():
+    def regular_customer(**kwargs):
+        return CarShowRoomDiscountFactory(
+            discount_name="regular_customer",
+            discount_rate=random.randint(0, 100),
+            **kwargs
+        )
+
+    return regular_customer

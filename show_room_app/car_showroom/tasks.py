@@ -24,7 +24,7 @@ def buy_car_from_provider(user_id: int) -> None:
         for car_item in car_provider:
             # calculate discount
             discount = get_full_discount(
-                provider_id=car_item.provider_id, car_showroom_id=user_id
+                provider_id=car_item.provider.user.id, car_showroom_id=user_id
             )
 
             price = car_item.provider_price * discount + car_item.provider_price
