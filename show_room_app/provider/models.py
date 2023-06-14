@@ -4,9 +4,19 @@ from core.abstract_models import BaseRole, BaseSellModel
 
 
 class Provider(BaseRole):
-    cars = models.ManyToManyField("cars.Car", through="CarProvider")
+    """
+    The model describes provider characteristic.
+    """
+
+    cars = models.ManyToManyField(
+        "cars.Car",
+        through="CarProvider",
+    )
     user = models.OneToOneField(
-        "user.User", on_delete=models.CASCADE, primary_key=True, related_name="provider"
+        "user.User",
+        on_delete=models.CASCADE,
+        related_name="provider",
+        limit_choices_to={"is_provider": True},
     )
 
     def __str__(self):
@@ -18,12 +28,26 @@ class Provider(BaseRole):
 
 class CarProvider(BaseSellModel):
     """
-    This model is describing relationship Car-Provider,
-    and add number of car with margin(rate).
+    The model describes which cars the provider sells.
     """
 
-    car = models.ForeignKey("cars.Car", on_delete=models.CASCADE)
-    provider = models.ForeignKey("provider.Provider", on_delete=models.CASCADE)
+    car = models.ForeignKey(
+        "cars.Car",
+        related_name="car",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
+    provider = models.ForeignKey(
+        "provider.Provider",
+        related_name="provider",
+        on_delete=models.CASCADE,
+        limit_choices_to={"is_active": True},
+    )
+
+    @property
+    def provider_price(self):
+        margin_amount = self.car.price * (self.margin / 100)
+        return self.car.price + margin_amount
 
     def __str__(self):
-        return f"{self.car} "
+        return self.provider.name

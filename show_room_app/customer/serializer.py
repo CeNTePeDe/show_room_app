@@ -1,42 +1,34 @@
 from rest_framework import serializers
 
-from car_showroom.serializer import CarShowRoomSerializer
-from cars.serializer import CarSerializer
+from car_showroom.models import CarShowRoom
+from cars.models import Car
 from customer.models import Customer, Transaction
-from discount.serializer import CarShowRoomDiscountSerializer, SeasonDiscountSerializer
-from user.models import User
-from user.serializer import UserSerializer
 
 
 class CustomerSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
-
     class Meta:
         model = Customer
-        fields = ("user", "username", "balance", "max_price", "is_active")
-        read_only_fields = ("balance",)
-
-    def create(self, validated_data):
-        user_data = validated_data.pop("user")
-        user = User.objects.create(**user_data)
-        customer = Customer.objects.create(user=user, **validated_data)
-
-        return customer
+        fields = ("user", "username", "balance", "model_car", "is_active")
 
 
 class TransactionSerializer(serializers.ModelSerializer):
-    # car_showroom = CarShowRoomSerializer()
-    # discount = CarShowRoomDiscountSerializer()
-    # season_discount = SeasonDiscountSerializer()
-    # car = CarSerializer()
+    car_showroom = serializers.SlugRelatedField(
+        many=False, slug_field="name", queryset=CarShowRoom.objects.all()
+    )
+
+    customer = serializers.SlugRelatedField(
+        many=False, slug_field="username", queryset=Customer.objects.all()
+    )
+    car = serializers.SlugRelatedField(
+        many=False, slug_field="name", queryset=Car.objects.all()
+    )
 
     class Meta:
         model = Transaction
         fields = (
-            "car_showroom",
             "car",
+            "customer",
+            "car_showroom",
             "price",
             "date",
-            "discount",
-            "season_discount",
         )

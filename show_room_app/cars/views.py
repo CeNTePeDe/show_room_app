@@ -24,8 +24,7 @@ class CarView(
     serializer_class = CarSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = CarFilter
-
-    # permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
@@ -41,8 +40,7 @@ class CarView(
     )
     def inactive_cars(self, request):
         inactive = Car.objects.filter(is_active=False)
-        self.serializer = CarSerializer(inactive, many=True)
-        serializer = self.serializer
+        serializer = self.serializer_class(inactive)
         return Response(serializer.data)
 
     @action(

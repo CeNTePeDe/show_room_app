@@ -5,10 +5,10 @@ import factory
 from factory import fuzzy
 
 from car_showroom.models import CarShowRoom, SellModel
-from cars.choice import Color, EnginType, NumberOfDoor, BodyType
+from cars.choice import Color, EngineType, NumberOfDoor, BodyType
 from cars.tests.factories import CarFactory
 from core.tests.factories import JSONFactory
-from discount.tests.factories import ProviderDiscountFactory, SeasonDiscountFactory
+from discount.tests.factories import ProviderDiscountFactory
 from provider.tests.factories import ProviderFactory
 from user.tests.factories import UserFactory
 
@@ -17,14 +17,14 @@ class CarShowRoomFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = CarShowRoom
 
-    name = factory.Faker('name')
-    year = factory.Faker('year')
+    name = factory.Faker("name")
+    year = factory.Faker("year")
     balance = Decimal("23.99")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
-    characteristic = factory.Dict(
+    list_cars_to_buy = factory.Dict(
         {
             "color": fuzzy.FuzzyChoice(Color),
-            "engine_type": fuzzy.FuzzyChoice(EnginType),
+            "engine_type": fuzzy.FuzzyChoice(EngineType),
             "number_of_doors": fuzzy.FuzzyChoice(NumberOfDoor),
             "body_type": fuzzy.FuzzyChoice(BodyType),
         },
@@ -39,13 +39,12 @@ class SellModelFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = SellModel
 
-    car = factory.SubFactory(CarFactory)
     car_showroom = factory.SubFactory(CarShowRoomFactory)
-    provider = factory.SubFactory(ProviderFactory)
-    discount = factory.SubFactory(ProviderDiscountFactory)
-    season_discount = factory.SubFactory(SeasonDiscountFactory)
+    car = factory.SubFactory(CarFactory)
     margin = random.randint(0, 100)
-    number_of_cars = random.randint(0, 100)
+    count = random.randint(0, 100)
+    provider = factory.SubFactory(ProviderFactory)
+    price_provider = Decimal("10.0")
 
 
 class CarShowRoomWithSellFactory(CarShowRoomFactory):

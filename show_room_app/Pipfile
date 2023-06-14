@@ -28,6 +28,14 @@ faker-vehicle = "*"
 pytest-drf = "*"
 factory-boy = "*"
 pytest-factoryboy = "*"
+celery = "*"
+redis = "*"
+flower = "*"
+django-celery-beat = "*"
+tzdata = "*"
+pytest-celery = "*"
+pytest-mock = "*"
+gunicorn = "*"
 
 [dev-packages]
 

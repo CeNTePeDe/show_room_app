@@ -2,12 +2,12 @@ from django.db import models
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
 
-from cars.choice import BodyType, EnginType, NumberOfDoor, Color
-from core.validators_show_room import validate_year
+from cars.choice import BodyType, EngineType, NumberOfDoor, Color
+from core.validators import validate_year
 
 
 class Car(models.Model):
-    """This model describe Car."""
+    """The model describe Car."""
 
     name = models.CharField(max_length=40)
     model_car = models.CharField(max_length=40)
@@ -30,7 +30,7 @@ class Car(models.Model):
         default=Color.Emerald,
     )
     engine_type = models.CharField(
-        max_length=25, choices=EnginType.choices, default=EnginType.Petrol
+        max_length=25, choices=EngineType.choices, default=EngineType.Petrol
     )
     number_of_doors = models.CharField(
         max_length=25, choices=NumberOfDoor.choices, default=NumberOfDoor.FourDoor

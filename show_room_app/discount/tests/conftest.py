@@ -3,7 +3,6 @@ import pytest
 from .factories import (
     CarShowRoomDiscountFactory,
     ProviderDiscountFactory,
-    SeasonDiscountFactory,
 )
 
 
@@ -25,31 +24,15 @@ def build_provider_discount():
 
 @pytest.fixture
 def create_car_showroom_discount():
-    def provider_discount(**kwargs):
+    def car_showroom_discount(**kwargs):
         return CarShowRoomDiscountFactory(**kwargs)
 
-    return provider_discount
+    return car_showroom_discount
 
 
 @pytest.fixture
 def build_car_showroom_discount():
-    def provider_discount(**kwargs):
+    def car_showroom_discount(**kwargs):
         return CarShowRoomDiscountFactory.build(**kwargs)
 
-    return provider_discount
-
-
-@pytest.fixture
-def create_season_discount():
-    def season_discount(**kwargs):
-        return SeasonDiscountFactory(**kwargs)
-
-    return season_discount
-
-
-@pytest.fixture
-def build_season_discount():
-    def season_discount(**kwargs):
-        return SeasonDiscountFactory.build(**kwargs)
-
-    return season_discount
+    return car_showroom_discount

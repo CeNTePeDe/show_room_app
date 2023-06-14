@@ -4,11 +4,13 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
+from cars.permission import IsAdminUserOrReadOnly
 from customer.serializer import (
     CustomerSerializer,
     TransactionSerializer,
 )
 from customer.models import Customer, Transaction
+from customer.services import TransactionFilter
 from user.permission import IsCustomerOrReadOnly, IsCarShowroomOrReadOnly
 
 
@@ -23,12 +25,12 @@ class CustomerView(
 
     queryset = Customer.objects.filter(is_active=True).select_related("user")
     serializer_class = CustomerSerializer
-    # permission_classes = [IsCustomerOrReadOnly]
+    permission_classes = [IsCustomerOrReadOnly]
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()
-        car_showroom = get_object_or_404(queryset, pk=pk)
-        serializer = self.serializer_class(car_showroom)
+        customer = get_object_or_404(queryset, pk=pk)
+        serializer = self.serializer_class(customer)
         return Response(serializer.data)
 
     @action(
@@ -46,11 +48,10 @@ class TransactionView(
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Transaction.objects.prefetch_related(
-        "car_showroom", "season_discount", "discount", "car"
-    )
+    queryset = Transaction.objects.prefetch_related("customer", "car_showroom", "car")
     serializer_class = TransactionSerializer
-    # permission_classes = [IsCarShowroomOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly]
+    filterset_class = TransactionFilter
 
     def retrieve(self, request, pk=id, *args, **kwargs):
         queryset = self.get_queryset()

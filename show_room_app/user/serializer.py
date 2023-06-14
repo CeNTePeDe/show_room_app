@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from user.models import User
 
@@ -19,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class UserRegisterationSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Serializer class to serialize registration requests and create a new user.
     """
@@ -27,7 +28,9 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(queryset=User.objects.all())]
     )
-    username = serializers.CharField(required=True)
+    username = serializers.CharField(
+        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+    )
     first_name = serializers.CharField(required=False, write_only=True)
     last_name = serializers.CharField(required=False, write_only=True)
 
@@ -57,6 +60,16 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {"password": "Password fields didn't match."}
             )
+        if (
+            attrs["is_customer"] == False
+            and attrs["is_car_showroom"] == False
+            and attrs["is_provider"] == False
+        ):
+            raise serializers.ValidationError(
+                {
+                    "Message": "One of this fields(customer, car_showroom, provider) must be chosen."
+                }
+            )
         return attrs
 
     def create(self, validated_data):
@@ -64,7 +77,6 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
             username=validated_data["username"],
             email=validated_data["email"],
             password=validated_data["password"],
-            password_confirm=validated_data["password_confirm"],
             is_customer=validated_data["is_customer"],
             is_provider=validated_data["is_provider"],
             is_car_showroom=validated_data["is_car_showroom"],
@@ -73,15 +85,20 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
+    def update(self, instance, validated_data):
+        if validated_data.get("password"):
+            instance.set_password(validated_data.pop("password"))
+        super().update(instance, validated_data)
+        instance.save()
+        return instance
+
 
 class UserLoginSerializer(serializers.ModelSerializer):
     """
     Serializer class to authenticate users with email and password.
     """
 
-    email = serializers.EmailField(
-        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+    email = serializers.EmailField(required=True)
     username = serializers.CharField(required=True)
     password = serializers.CharField(required=True, write_only=True)
 
@@ -91,36 +108,60 @@ class UserLoginSerializer(serializers.ModelSerializer):
             return user
         raise serializers.ValidationError("Incorrect Credentials")
 
+    class Meta:
+        model = User
+        fields = ("username", "email", "password")
+
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
-    password_reset = serializers.CharField(write_only=True, required=True)
-    old_password = serializers.CharField(write_only=True, required=True)
+    password_confirm = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ("old_password", "password", "password2")
+        fields = ("password", "password_confirm")
 
     def validate(self, attrs):
-        if attrs["password"] != attrs["password2"]:
+        if attrs["password"] != attrs["password_confirm"]:
             raise serializers.ValidationError(
                 {"password": "Password fields didn't match."}
             )
 
         return attrs
 
-    def validate_old_password(self, value):
-        user = self.context["request"].user
-        if not user.check_password(value):
-            raise serializers.ValidationError(
-                {"old_password": "Old password is not correct"}
-            )
-        return value
-
     def update(self, instance, validated_data):
         instance.set_password(validated_data["password"])
         instance.save()
-
         return instance
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ("email",)
+
+
+class TokenPairSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        user = authenticate(email=email, password=password)
+
+        if not user:
+            raise serializers.ValidationError("Invalid email or password")
+
+        refresh = RefreshToken.for_user(user)
+
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "user": user,
+        }

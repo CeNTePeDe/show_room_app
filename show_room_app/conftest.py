@@ -1,12 +1,28 @@
 import pytest
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import AccessToken
 
+from user.models import User
 from user.tests.factories import UserFactory
 
 
 @pytest.fixture
-def api_client():
+def simple_api_client():
     client = APIClient()
+    return client
+
+
+@pytest.fixture()
+def admin_api_client():
+    # Create an admin user
+    user = User.objects.create_superuser(
+        username="user", email="admin_user@example.ru", password="1111", is_active=True
+    )
+    access_token = AccessToken.for_user(user)
+
+    # Create an API client and authenticate with the access token
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION="Bearer " + str(access_token))
     return client
 
 

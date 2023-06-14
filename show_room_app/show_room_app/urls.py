@@ -2,15 +2,10 @@ from django.contrib import admin
 
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
 
 
 from show_room_app import settings
@@ -57,8 +52,6 @@ urlpatterns = [
     path("api/v1_customer/", include("customer.urls")),
     path("api/v1_discount/", include("discount.urls")),
     path("api/v1_user/", include("user.urls")),
-    #     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    #     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 if settings.DEBUG:
     urlpatterns = [path("__debug__/", include("debug_toolbar.urls"))] + urlpatterns

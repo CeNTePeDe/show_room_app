@@ -8,13 +8,11 @@ class CustomerAdmin(admin.ModelAdmin):
     list_display = (
         "username",
         "balance",
-        "max_price",
-        "transaction",
+        "model_car",
         "is_active",
         "user",
     )
     list_filter = ("username",)
-    readonly_fields = ("user",)
 
 
 @admin.register(Transaction)
@@ -22,8 +20,7 @@ class TransactionAdmin(admin.ModelAdmin):
     list_display = (
         "car",
         "car_showroom",
-        "discount",
-        "season_discount",
+        "customer",
         "price",
         "date",
     )

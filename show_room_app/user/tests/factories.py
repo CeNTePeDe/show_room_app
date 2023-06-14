@@ -15,7 +15,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
     password = "1111"
-    password_confirm = "1111"
     is_customer = False
     is_provider = False
     is_car_showroom = False
+    is_active = True
