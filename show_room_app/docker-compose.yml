@@ -76,6 +76,7 @@ services:
   celery-beat:
     build:
       context: .
+    restart: always
     command: celery -A show_room_app beat -l info
     volumes:
       - .:/usr/src/show_room_app
@@ -87,5 +88,21 @@ services:
       - redis
       - pq_db
 
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - .:/usr/src/show_room_app
+      - ./static/:/static
+
+    depends_on:
+      - web
+
+
 volumes:
   pg_project:
+  static:
+
