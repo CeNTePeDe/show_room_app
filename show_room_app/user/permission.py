@@ -10,8 +10,8 @@ class IsCustomerOrReadOnly(BasePermission):
     def has_permission(self, request: Any, view: Any) -> bool:
         return (
             request.method in permissions.SAFE_METHODS
-            or request.user
-            and request.user.is_staff
+            or request.user.is_authenticated
+            and request.user.is_customer
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
@@ -26,8 +26,8 @@ class IsCarShowroomOrReadOnly(BasePermission):
     def has_permission(self, request: Any, view: Any) -> bool:
         return (
             request.method in permissions.SAFE_METHODS
-            or request.user
-            and request.user.is_staff
+            or request.user.is_authenticated
+            and request.user.is_car_showroom
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
@@ -36,17 +36,43 @@ class IsCarShowroomOrReadOnly(BasePermission):
         ) or request.user.is_superuser
 
 
+class IsCarShowroomDiscountOrReadOnly(BasePermission):
+    """
+    Custom permission for CarShowRoomDiscount owner
+    """
+
+    def has_permission(self, request: Any, view: Any) -> bool:
+        return (
+            request.method in permissions.SAFE_METHODS
+            or request.user.is_authenticated
+            and request.user.is_car_showroom
+        )
+
+
 class IsProviderOrReadOnly(BasePermission):
     """Custom permission for provider."""
 
     def has_permission(self, request: Any, view: Any) -> bool:
         return (
             request.method in permissions.SAFE_METHODS
-            or request.user
-            and request.user.is_staff
+            or request.user.is_authenticated
+            and request.user.is_provider
         )
 
     def has_object_permission(self, request: Any, view: Any, obj: Any) -> bool:
         return (
             obj.user == request.user and request.user.is_provider
         ) or request.user.is_superuser
+
+
+class IsProviderDiscountOrReadOnly(BasePermission):
+    """
+    Custom permission for ProviderDiscount owner
+    """
+
+    def has_permission(self, request: Any, view: Any) -> bool:
+        return (
+            request.method in permissions.SAFE_METHODS
+            or request.user.is_authenticated
+            and request.user.is_provider
+        )

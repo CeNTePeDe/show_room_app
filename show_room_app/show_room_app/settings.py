@@ -204,12 +204,12 @@ import zoneinfo
 
 zoneinfo.available_timezones()
 
-CELERY_BEAT_SCHEDULE = {
-    "Buy car from provider": {
-        "task": "car_showroom.tasks.buy_car_from_provider_for_each_car_showroom",
-        "schedule": crontab(minute="*/15"),
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "Buy car from provider": {
+#         "task": "car_showroom.tasks.buy_car_from_provider_for_each_car_showroom",
+#         "schedule": crontab(minute="*/15"),
+#     },
+# }
 
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")

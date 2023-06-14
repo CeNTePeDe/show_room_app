@@ -40,8 +40,7 @@ class CarView(
     )
     def inactive_cars(self, request):
         inactive = Car.objects.filter(is_active=False)
-        self.serializer = CarSerializer(inactive, many=True)
-        serializer = self.serializer
+        serializer = self.serializer_class(inactive)
         return Response(serializer.data)
 
     @action(

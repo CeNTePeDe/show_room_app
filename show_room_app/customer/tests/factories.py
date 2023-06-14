@@ -1,24 +1,26 @@
 from decimal import Decimal
 
 import factory
+from faker import Faker
+from faker_vehicle import VehicleProvider
 
 from car_showroom.tests.factories import CarShowRoomFactory
 from cars.tests.factories import CarFactory
 from customer.models import Customer, Transaction
-
-
-from discount.tests.factories import CarShowRoomDiscountFactory
 from user.tests.factories import UserFactory
+
+fake = Faker()
+fake.add_provider(VehicleProvider)
 
 
 class TransactionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Transaction
 
-    car_showroom = factory.SubFactory(CarShowRoomFactory)
     car = factory.SubFactory(CarFactory)
+    customer = factory.SubFactory(Customer)
+    car_showroom = factory.SubFactory(CarShowRoomFactory)
     price = Decimal("23.99")
-    discount = factory.SubFactory(CarShowRoomDiscountFactory)
 
 
 class CustomerFactory(factory.django.DjangoModelFactory):
@@ -27,7 +29,8 @@ class CustomerFactory(factory.django.DjangoModelFactory):
 
     username = factory.Faker("name")
     balance = Decimal("23.99")
-    max_price = Decimal("5413615.00")
-    transaction = factory.SubFactory(TransactionFactory)
+    model_car = factory.Dict(
+        {"name": fake.vehicle_make(), "model": fake.vehicle_model(), "price": 0.0, "count":1}
+    )
     is_active = True
     user = factory.SubFactory(UserFactory)

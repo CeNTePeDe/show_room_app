@@ -1,5 +1,6 @@
 from django.db import models
 from djmoney.models.fields import MoneyField
+from djmoney.models.validators import MinMoneyValidator
 
 from core.abstract_models import BaseRole, BaseSellModel
 from core.constants import jsonfield_car_showroom
@@ -12,11 +13,14 @@ class CarShowRoom(BaseRole):
 
     cars = models.ManyToManyField("cars.Car", through="SellModel")
     list_cars_to_buy = models.JSONField(default=jsonfield_car_showroom)
-    balance = MoneyField(max_digits=14, decimal_places=2, default_currency="USD")
+    balance = MoneyField(
+        max_digits=14,
+        decimal_places=2,
+        default_currency="USD",
+    )
     user = models.OneToOneField(
         "user.User",
         on_delete=models.CASCADE,
-        primary_key=True,
         related_name="car_showroom",
         limit_choices_to={"is_car_showroom": True},
     )

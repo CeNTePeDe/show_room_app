@@ -18,14 +18,6 @@ class ProviderFactory(factory.django.DjangoModelFactory):
     name = factory.Faker("name")
     year = factory.Faker("year")
     country = random.choice(["CA", "FR", "DE", "IT", "JP", "RU", "GB"])
-    characteristic = factory.Dict(
-        {
-            "color": fuzzy.FuzzyChoice(Color),
-            "engine_type": fuzzy.FuzzyChoice(EngineType),
-            "number_of_doors": fuzzy.FuzzyChoice(NumberOfDoor),
-            "body_type": fuzzy.FuzzyChoice(BodyType),
-        }
-    )
     is_active = True
     user = factory.SubFactory(UserFactory)
 
@@ -37,4 +29,3 @@ class CarProviderFactory(factory.django.DjangoModelFactory):
     car = factory.SubFactory(CarFactory)
     provider = factory.SubFactory(ProviderFactory)
     margin = random.randint(0, 100)
-    number_of_cars = random.randint(0, 100)

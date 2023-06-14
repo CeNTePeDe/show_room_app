@@ -33,6 +33,8 @@ redis = "*"
 flower = "*"
 django-celery-beat = "*"
 tzdata = "*"
+pytest-celery = "*"
+pytest-mock = "*"
 
 [dev-packages]
 

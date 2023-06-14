@@ -11,9 +11,9 @@ def get_season_discount_from_provider(sale_date: date, provider_id: int) -> int:
         season_discount = provider.discounts.get(
             date_start__lte=sale_date, date_finish__gte=sale_date, is_active=True
         ).discount_rate
-        return season_discount
     except ProviderDiscount.DoesNotExist:
         return 0
+    return season_discount
 
 
 def get_provider_discount_for_special_client(

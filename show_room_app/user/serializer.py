@@ -61,9 +61,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 {"password": "Password fields didn't match."}
             )
         if (
-                attrs["is_customer"] == False
-                and attrs["is_car_showroom"] == False
-                and attrs["is_provider"] == False
+            attrs["is_customer"] == False
+            and attrs["is_car_showroom"] == False
+            and attrs["is_provider"] == False
         ):
             raise serializers.ValidationError(
                 {
@@ -71,6 +71,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 }
             )
         return attrs
+
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data["username"],

@@ -24,15 +24,15 @@ def build_provider_discount():
 
 @pytest.fixture
 def create_car_showroom_discount():
-    def provider_discount(**kwargs):
+    def car_showroom_discount(**kwargs):
         return CarShowRoomDiscountFactory(**kwargs)
 
-    return provider_discount
+    return car_showroom_discount
 
 
 @pytest.fixture
 def build_car_showroom_discount():
-    def provider_discount(**kwargs):
+    def car_showroom_discount(**kwargs):
         return CarShowRoomDiscountFactory.build(**kwargs)
 
-    return provider_discount
+    return car_showroom_discount
