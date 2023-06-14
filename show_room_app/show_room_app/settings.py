@@ -87,17 +87,6 @@ DATABASES = {
     },
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'show_room_app',
-#         'USER': 'postgres',
-#         'PASSWORD': '****',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }
-# }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -133,10 +122,7 @@ AUTH_USER_MODEL = "user.User"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -204,12 +190,12 @@ import zoneinfo
 
 zoneinfo.available_timezones()
 
-# CELERY_BEAT_SCHEDULE = {
-#     "Buy car from provider": {
-#         "task": "car_showroom.tasks.buy_car_from_provider_for_each_car_showroom",
-#         "schedule": crontab(minute="*/15"),
-#     },
-# }
+CELERY_BEAT_SCHEDULE = {
+    "Buy car from provider": {
+        "task": "car_showroom.tasks.buy_car_from_provider_for_each_car_showroom",
+        "schedule": crontab(minute="*/60"),
+    },
+}
 
 
 EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
